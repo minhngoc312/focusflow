@@ -481,6 +481,29 @@ Không lan man.
     except Exception as e:
         print("GPT ERROR:", e)
         return jsonify({"error": "Không kết nối được AI."}), 500
+    
+@app.route("/admin/reset")
+def admin_reset_page():
+    return render_template("admin_reset.html")
+
+@app.route("/admin/reset-password", methods=["POST"])
+def admin_reset_password():
+    email = request.form.get("email", "").strip().lower()
+
+    if not email:
+        return "Thiếu email"
+
+    new_pass = "123456"
+
+    db = sqlite3.connect(DATABASE)
+    db.execute(
+        "UPDATE users SET password_hash=? WHERE email=?",
+        (generate_password_hash(new_pass), email)
+    )
+    db.commit()
+    db.close()
+
+    return f"Đã reset mật khẩu của {email} thành 123456"
 
 if __name__ == "__main__":
     app.run(debug=True)
