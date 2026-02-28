@@ -376,6 +376,10 @@ def api_analytics():
 
 # ================= AUTH PAGES =================
 
+@app.route("/terms")
+def terms():
+    return render_template("terms.html")
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
