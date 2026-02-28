@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: focusflow-ai
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true          # Render auto-generates a secure random value
+      - key: OPENAI_API_KEY
+        sync: false                  # Paste this manually in the Render dashboard
+    disk:
+      name: sqlite-db
+      mountPath: /opt/render/project/src/instance
+      sizeGB: 1

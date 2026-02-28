@@ -1,0 +1,510 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — FocusFlow{% endblock %}
+
+{% block extra_styles %}
+/* ── Layout ── */
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+}
+
+/* ── Navbar ── */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(10,10,15,0.8);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+}
+
+.brand-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 0.35rem 0.75rem 0.35rem 0.4rem;
+  font-size: 0.82rem;
+}
+
+.user-avatar {
+  width: 24px; height: 24px;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.user-email {
+  color: var(--muted);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-logout {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4rem 0.85rem;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-logout:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* ── Main ── */
+.main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  width: 100%;
+}
+
+/* ── Stats row ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+  animation: fadeIn 0.4s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.stat-card:nth-child(1)::after { background: var(--accent); }
+.stat-card:nth-child(2)::after { background: var(--accent2); }
+.stat-card:nth-child(3)::after { background: var(--accent3); }
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+.stat-value {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.stat-card:nth-child(1) .stat-value { color: var(--accent); }
+.stat-card:nth-child(2) .stat-value { color: var(--accent2); }
+.stat-card:nth-child(3) .stat-value { color: var(--accent3); }
+
+.stat-sub {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+/* ── Two-col grid ── */
+.grid2 {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  animation: fadeIn 0.5s ease 0.1s both;
+}
+
+/* ── Add block form ── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.panel-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.form-group { margin-bottom: 1rem; }
+
+label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus { border-color: var(--accent); }
+input::placeholder { color: var(--muted); }
+
+.duration-presets {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+
+.preset-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.preset-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-add {
+  width: 100%;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, var(--accent), #9b7fff);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  margin-top: 0.5rem;
+}
+
+.btn-add:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* ── Block list ── */
+.blocks-header {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.blocks-count {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.block-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.block-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.block-item:hover { border-color: rgba(123,97,255,0.4); }
+
+.block-item.done {
+  opacity: 0.5;
+}
+
+.block-item.done::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent3);
+}
+
+.block-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.block-item.done .block-dot { background: var(--accent3); }
+
+.block-info { flex: 1; min-width: 0; }
+
+.block-subject {
+  font-weight: 500;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.block-item.done .block-subject {
+  text-decoration: line-through;
+}
+
+.block-meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.15rem;
+}
+
+.block-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.btn-complete {
+  background: rgba(0,229,160,0.1);
+  border: 1px solid rgba(0,229,160,0.3);
+  border-radius: 7px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.75rem;
+  color: var(--accent3);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+
+.btn-complete:hover {
+  background: rgba(0,229,160,0.2);
+}
+
+.btn-delete {
+  background: rgba(255,107,107,0.08);
+  border: 1px solid rgba(255,107,107,0.2);
+  border-radius: 7px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.75rem;
+  color: var(--danger);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+
+.btn-delete:hover { background: rgba(255,107,107,0.18); }
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--muted);
+}
+
+.empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.empty-text { font-size: 0.9rem; line-height: 1.6; }
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stats .stat-card:last-child { grid-column: 1 / -1; }
+  .grid2 { grid-template-columns: 1fr; }
+  .nav { padding: 0.75rem 1rem; }
+  .user-email { display: none; }
+}
+{% endblock %}
+
+{% block body %}
+<div class="app">
+  <nav class="nav">
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <span class="brand-name">FocusFlow</span>
+    </div>
+    <div class="nav-right">
+      <div class="user-badge">
+        <div class="user-avatar">{{ user.email[0].upper() }}</div>
+        <span class="user-email">{{ user.email }}</span>
+      </div>
+      <a href="/logout" class="btn-logout">Sign out</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Streak</div>
+        <div class="stat-value">{{ streak }}</div>
+        <div class="stat-sub">day{{ 's' if streak != 1 }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Completed</div>
+        <div class="stat-value">{{ completed_blocks }}</div>
+        <div class="stat-sub">blocks done</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Focus Time</div>
+        <div class="stat-value">{{ total_minutes }}</div>
+        <div class="stat-sub">minutes total</div>
+      </div>
+    </div>
+
+    <!-- Main grid -->
+    <div class="grid2">
+      <!-- Add block panel -->
+      <div class="panel">
+        <div class="panel-title">+ New Focus Block</div>
+        <form method="POST" action="/add_block">
+          <div class="form-group">
+            <label for="subject">What are you working on?</label>
+            <input type="text" id="subject" name="subject" placeholder="e.g. Deep work on feature X" required>
+          </div>
+          <div class="form-group">
+            <label>Duration</label>
+            <div class="duration-presets">
+              <button type="button" class="preset-btn" onclick="setDuration(25)">25 min</button>
+              <button type="button" class="preset-btn" onclick="setDuration(50)">50 min</button>
+              <button type="button" class="preset-btn" onclick="setDuration(90)">90 min</button>
+              <button type="button" class="preset-btn" onclick="setDuration(120)">2 hrs</button>
+            </div>
+            <input type="number" id="duration" name="duration" value="25" min="1" max="480">
+          </div>
+          <button type="submit" class="btn-add">Start Block ⚡</button>
+        </form>
+      </div>
+
+      <!-- Blocks list -->
+      <div>
+        <div class="blocks-header">
+          Focus Blocks
+          <span class="blocks-count">{{ blocks|length }} total</span>
+        </div>
+
+        {% if blocks %}
+        <div class="block-list">
+          {% for block in blocks %}
+          <div class="block-item {{ 'done' if block.completed }}">
+            <div class="block-dot"></div>
+            <div class="block-info">
+              <div class="block-subject">{{ block.subject }}</div>
+              <div class="block-meta">
+                {{ block.duration }} min
+                {% if block.completed %} · ✓ Completed{% endif %}
+              </div>
+            </div>
+            <div class="block-actions">
+              {% if not block.completed %}
+              <a href="/complete_block/{{ block.id }}" class="btn-complete">✓ Done</a>
+              {% endif %}
+              <a href="/delete_block/{{ block.id }}" class="btn-delete"
+                 onclick="return confirm('Delete this block?')">✕</a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">🎯</div>
+          <div class="empty-text">No focus blocks yet.<br>Add one to start tracking your work.</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+function setDuration(val) {
+  document.getElementById('duration').value = val;
+}
+</script>
+{% endblock %}
