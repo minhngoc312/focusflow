@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Analytics · FocusFlow AI{% endblock %}
+
+{% block content %}
+<div class="pg-head">
+  <div>
+    <div class="pg-eyebrow">Insight</div>
+    <div class="pg-title">Analytics</div>
+    <div class="pg-sub">Tổng hợp dữ liệu học tập từ database</div>
+  </div>
+  <a href="/" class="btn btn-ghost">← Dashboard</a>
+</div>
+
+<!-- FLASH MESSAGES -->
+{% with msgs = get_flashed_messages(with_categories=true) %}
+  {% if msgs %}
+  <div class="flash-list">
+    {% for cat, msg in msgs %}
+    <div class="flash-msg flash-{{ cat }}">{{ msg }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<!-- SUMMARY STATS -->
+<div class="analytics-stats">
+  <div class="sc">
+    <div class="sc-head"><div class="sc-ico" style="background:var(--ad)">🔥</div></div>
+    <div class="sc-val">{{ streak }}<span>ngày</span></div>
+    <div class="sc-lbl">Streak hiện tại</div>
+    <div class="sc-bar"><div class="sc-fill" style="width:{{ [streak/30*100,100]|min|int }}%;background:var(--amber)"></div></div>
+  </div>
+  <div class="sc">
+    <div class="sc-head"><div class="sc-ico" style="background:var(--acd)">⏱</div></div>
+    <div class="sc-val">{{ total_mins }}<span>p</span></div>
+    <div class="sc-lbl">Tổng phút học (all-time)</div>
+    <div class="sc-bar"><div class="sc-fill" style="width:{{ [total_mins/600*100,100]|min|int }}%;background:var(--ac)"></div></div>
+  </div>
+  <div class="sc">
+    <div class="sc-head"><div class="sc-ico" style="background:var(--gd)">✅</div></div>
+    <div class="sc-val">{{ total_blocks }}<span>blocks</span></div>
+    <div class="sc-lbl">Tổng blocks hoàn thành</div>
+    <div class="sc-bar"><div class="sc-fill" style="width:{{ [total_blocks/50*100,100]|min|int }}%;background:var(--green)"></div></div>
+  </div>
+  <div class="sc">
+    <div class="sc-head"><div class="sc-ico" style="background:var(--rd)">📈</div></div>
+    <div class="sc-val">{{ stats.efficiency }}<span>%</span></div>
+    <div class="sc-lbl">Hiệu suất hôm nay</div>
+    <div class="sc-bar"><div class="sc-fill" style="width:{{ stats.efficiency }}%;background:var(--ac)"></div></div>
+  </div>
+</div>
+
+<!-- 7-DAY CHART -->
+<div class="sec-card" style="margin-bottom:24px">
+  <div class="sec-head">
+    <div><div class="sec-title">Biểu đồ 7 ngày gần nhất</div><div class="sec-sub">Phút học thực tế mỗi ngày · mục tiêu: {{ user.daily_goal }}p</div></div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--ac)"></div>Thực tế</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>Mục tiêu ({{ user.daily_goal }}p)</div>
+    </div>
+    {% if chart|selectattr('minutes','gt',0)|list %}
+      <canvas id="analyticsChart" height="180"></canvas>
+    {% else %}
+      <div style="padding:40px;text-align:center;color:var(--tx3);font-size:13px">
+        Chưa có dữ liệu — hoàn thành block đầu tiên để xem biểu đồ!
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- DAILY BREAKDOWN TABLE -->
+<div class="sec-card" style="margin-bottom:24px">
+  <div class="sec-head"><div class="sec-title">Chi tiết 7 ngày</div></div>
+  <div style="padding:0 20px 16px">
+    <table style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr>
+          <th style="text-align:left;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);padding:12px 0 8px;border-bottom:1px solid var(--bd)">Ngày</th>
+          <th style="text-align:right;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);padding:12px 0 8px;border-bottom:1px solid var(--bd)">Phút học</th>
+          <th style="text-align:right;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);padding:12px 0 8px;border-bottom:1px solid var(--bd)">Mục tiêu</th>
+          <th style="text-align:right;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);padding:12px 0 8px;border-bottom:1px solid var(--bd)">Đạt</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in chart %}
+        <tr style="border-bottom:1px solid var(--bd)">
+          <td style="padding:10px 0;font-size:13px;color:var(--tx)">{{ d.date }} <span style="color:var(--tx3)">({{ d.label }})</span></td>
+          <td style="text-align:right;font-size:13px;font-weight:600;color:{% if d.minutes >= user.daily_goal %}var(--green){% elif d.minutes > 0 %}var(--amber){% else %}var(--tx3){% endif %}">
+            {{ d.minutes }}p
+          </td>
+          <td style="text-align:right;font-size:13px;color:var(--tx3)">{{ user.daily_goal }}p</td>
+          <td style="text-align:right;font-size:13px">
+            {% if d.minutes >= user.daily_goal %}
+              <span style="color:var(--green)">✅</span>
+            {% elif d.minutes > 0 %}
+              <span style="color:var(--amber)">⚡</span>
+            {% else %}
+              <span style="color:var(--tx3)">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const chartData = {{ chart|tojson }};
+const goal = {{ user.daily_goal }};
+
+function redrawChart(){
+  drawLineChart('analyticsChart', chartData, goal);
+}
+window.addEventListener('resize', redrawChart);
+setTimeout(redrawChart, 100);
+</script>
+{% endblock %}

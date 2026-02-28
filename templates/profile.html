@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Hồ sơ · FocusFlow AI{% endblock %}
+
+{% block content %}
+<div class="pg-head">
+  <div>
+    <div class="pg-eyebrow">Tài khoản</div>
+    <div class="pg-title">Hồ sơ của bạn</div>
+    <div class="pg-sub">Quản lý thông tin cá nhân và bảo mật</div>
+  </div>
+</div>
+
+{% with msgs = get_flashed_messages(with_categories=true) %}
+  {% if msgs %}
+  <div class="flash-list">
+    {% for cat, msg in msgs %}
+    <div class="flash-msg flash-{{ cat }}">{{ msg }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<!-- PROFILE STATS -->
+<div class="profile-stats">
+  <div class="psc">
+    <div class="psc-val">{{ streak }}</div>
+    <div class="psc-lbl">🔥 Streak hiện tại (ngày)</div>
+  </div>
+  <div class="psc">
+    <div class="psc-val">{{ stats.done_blocks }}</div>
+    <div class="psc-lbl">✅ Blocks đã hoàn thành</div>
+  </div>
+  <div class="psc">
+    <div class="psc-val">{{ stats.total_mins }}</div>
+    <div class="psc-lbl">⏱ Tổng phút học (phút)</div>
+  </div>
+</div>
+
+<!-- INFO CARD -->
+<div class="form-card">
+  <div class="form-card-head">
+    <div class="form-card-title">Thông tin cơ bản</div>
+    <div class="form-card-sub">Email đăng ký và tên hiển thị</div>
+  </div>
+  <div class="form-card-body">
+    <form method="POST" action="/profile">
+      <input type="hidden" name="action" value="change_name"/>
+      <div class="field-group">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" value="{{ user.email }}" disabled style="opacity:.6;cursor:not-allowed"/>
+          <div class="field-hint">Email không thể thay đổi.</div>
+        </div>
+        <div class="field">
+          <label>Họ và tên</label>
+          <input type="text" name="full_name" value="{{ user.full_name or '' }}" placeholder="Nguyễn Văn A"/>
+        </div>
+        <div class="field">
+          <label>Tham gia từ</label>
+          <input type="text" value="{{ user.created_at[:10] if user.created_at else '—' }}" disabled style="opacity:.6;cursor:not-allowed"/>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- PASSWORD CARD -->
+<div class="form-card">
+  <div class="form-card-head">
+    <div class="form-card-title">Đổi mật khẩu</div>
+    <div class="form-card-sub">Mật khẩu phải có ít nhất 6 ký tự</div>
+  </div>
+  <div class="form-card-body">
+    <form method="POST" action="/profile">
+      <input type="hidden" name="action" value="change_password"/>
+      <div class="field-group">
+        <div class="field">
+          <label>Mật khẩu hiện tại</label>
+          <input type="password" name="current_password" placeholder="••••••••" required/>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Mật khẩu mới</label>
+            <input type="password" name="new_password" placeholder="Tối thiểu 6 ký tự" required/>
+          </div>
+          <div class="field">
+            <label>Xác nhận mật khẩu</label>
+            <input type="password" name="confirm_password" placeholder="Nhập lại" required/>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- DANGER ZONE -->
+<div class="form-card" style="border-color:rgba(248,113,113,.2)">
+  <div class="form-card-head" style="border-color:rgba(248,113,113,.2)">
+    <div class="form-card-title" style="color:var(--red)">Vùng nguy hiểm</div>
+    <div class="form-card-sub">Các hành động không thể hoàn tác</div>
+  </div>
+  <div class="form-card-body">
+    <p style="font-size:13px;color:var(--tx2);margin-bottom:16px">Đăng xuất khỏi tài khoản trên thiết bị này.</p>
+    <a href="/logout" class="btn btn-danger">🚪 Đăng xuất ngay</a>
+  </div>
+</div>
+{% endblock %}

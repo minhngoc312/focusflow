@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Chính sách bảo mật · FocusFlow AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --fd:'Outfit',sans-serif;--fb:'DM Sans',sans-serif;
+  --bg:#09090E;--bg2:#0F1117;--bg3:#161820;
+  --card:#13141A;--card2:#1A1B23;
+  --bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.12);
+  --tx:#ECEDF2;--tx2:#8B8D9A;--tx3:#4E505E;
+  --ac:#5B52F0;--ac2:#7B74F5;--ac3:#A39FF8;
+  --acd:rgba(91,82,240,.12);--acg:rgba(91,82,240,.3);
+  --green:#22C55E;--gd:rgba(34,197,94,.12);
+  --sh4:0 24px 80px rgba(0,0,0,.7);
+}
+[data-theme=light]{
+  --bg:#F8FAFC;--bg2:#F1F4F8;--bg3:#E9EDF4;
+  --card:#FFFFFF;--card2:#F8FAFC;
+  --bd:rgba(0,0,0,.08);--bd2:rgba(0,0,0,.13);
+  --tx:#111218;--tx2:#5A5D6E;--tx3:#9EA2B4;
+  --ac:#4338CA;--ac2:#5B52F0;--ac3:#7B74F5;
+  --acd:rgba(67,56,202,.08);--acg:rgba(67,56,202,.22);
+  --sh4:0 24px 80px rgba(0,0,0,.14);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--tx);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.page-wrap{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+.doc-header{margin-bottom:40px;padding-bottom:28px;border-bottom:1px solid var(--bd)}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--tx3);text-decoration:none;margin-bottom:20px;transition:color .15s}
+.back-link:hover{color:var(--ac3)}
+.logo-row{display:flex;align-items:center;gap:9px;margin-bottom:20px}
+.logo-ico{width:28px;height:28px;border-radius:7px;background:var(--ac);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:11px;font-weight:800;color:#fff;box-shadow:0 2px 8px var(--acg);flex-shrink:0}
+.logo-txt{font-family:var(--fd);font-weight:700;font-size:14px;letter-spacing:-.3px;color:var(--tx)}
+.doc-title{font-family:var(--fd);font-size:28px;font-weight:700;letter-spacing:-.5px;color:var(--tx);margin-bottom:8px}
+.doc-meta{font-size:12.5px;color:var(--tx3)}
+.doc-body h2{font-family:var(--fd);font-size:17px;font-weight:600;color:var(--tx);margin:32px 0 12px;padding-left:12px;border-left:3px solid var(--ac)}
+.doc-body h3{font-size:14px;font-weight:600;color:var(--tx);margin:20px 0 8px}
+.doc-body p{color:var(--tx2);margin-bottom:14px}
+.doc-body ul{color:var(--tx2);margin:0 0 14px 20px}
+.doc-body ul li{margin-bottom:6px}
+.doc-body a{color:var(--ac3);text-decoration:none}
+.doc-body a:hover{text-decoration:underline}
+.highlight-box{background:var(--gd);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:14px 18px;margin:18px 0;color:#22C55E;font-size:13.5px}
+.data-table{width:100%;border-collapse:collapse;margin:16px 0}
+.data-table th{text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);padding:8px 12px;border-bottom:1px solid var(--bd)}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--bd);font-size:13px;color:var(--tx2)}
+.data-table tr:last-child td{border-bottom:none}
+.theme-toggle{position:fixed;top:16px;right:16px;z-index:10;width:34px;height:34px;background:var(--card);border:1px solid var(--bd2);border-radius:8px;color:var(--tx2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:all .15s}
+.theme-toggle:hover{background:var(--card2);color:var(--tx)}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="Đổi giao diện">
+  <svg id="moonI" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg id="sunI"  width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+</button>
+
+<div class="page-wrap">
+  <div class="doc-header">
+    <a href="{{ url_for('register') }}" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Quay lại đăng ký
+    </a>
+    <div class="logo-row">
+      <div class="logo-ico">FF</div>
+      <span class="logo-txt">FocusFlow AI</span>
+    </div>
+    <div class="doc-title">Chính sách bảo mật</div>
+    <div class="doc-meta">Cập nhật lần cuối: tháng 2, 2026 · Chúng tôi cam kết bảo vệ quyền riêng tư của bạn</div>
+  </div>
+
+  <div class="doc-body">
+
+    <div class="highlight-box">
+      ✅ Cam kết của chúng tôi: Chúng tôi không bán dữ liệu cá nhân của bạn cho bên thứ ba. Chúng tôi chỉ thu thập dữ liệu tối thiểu cần thiết để cung cấp dịch vụ.
+    </div>
+
+    <h2>1. Thông tin chúng tôi thu thập</h2>
+
+    <h3>1.1 Thông tin bạn cung cấp trực tiếp</h3>
+    <table class="data-table">
+      <tr><th>Loại dữ liệu</th><th>Mục đích</th><th>Thời gian lưu trữ</th></tr>
+      <tr><td>Email</td><td>Đăng nhập, thông báo</td><td>Đến khi xoá tài khoản</td></tr>
+      <tr><td>Họ tên (tuỳ chọn)</td><td>Hiển thị trong app</td><td>Đến khi xoá tài khoản</td></tr>
+      <tr><td>Mật khẩu (đã mã hoá)</td><td>Xác thực</td><td>Đến khi xoá tài khoản</td></tr>
+      <tr><td>Nhịp sinh học</td><td>Cá nhân hoá kế hoạch</td><td>Lưu trong session, không lưu DB</td></tr>
+    </table>
+
+    <h3>1.2 Dữ liệu tự động thu thập</h3>
+    <ul>
+      <li>Địa chỉ IP (dùng cho bảo mật, không theo dõi người dùng)</li>
+      <li>Loại trình duyệt và hệ điều hành</li>
+      <li>Thời gian truy cập (server logs — tự xoá sau 30 ngày)</li>
+    </ul>
+
+    <h3>1.3 Nội dung chat với AI</h3>
+    <p>Tin nhắn bạn gửi cho AI Mentor được xử lý qua OpenAI API theo <a href="https://openai.com/policies/privacy-policy" target="_blank">chính sách của OpenAI</a>. Chúng tôi không lưu trữ lịch sử chat trên máy chủ của mình.</p>
+
+    <h2>2. Cách chúng tôi sử dụng dữ liệu</h2>
+    <ul>
+      <li>Cung cấp và vận hành Dịch vụ</li>
+      <li>Xác thực danh tính khi đăng nhập</li>
+      <li>Gửi email thông báo liên quan đến tài khoản (không spam)</li>
+      <li>Cải thiện chất lượng Dịch vụ thông qua dữ liệu ẩn danh</li>
+      <li>Phát hiện và ngăn chặn gian lận, lạm dụng</li>
+    </ul>
+
+    <h2>3. Chia sẻ dữ liệu</h2>
+    <p>Chúng tôi <strong>không bán</strong> dữ liệu cá nhân của bạn. Chúng tôi chỉ chia sẻ dữ liệu trong các trường hợp:</p>
+    <ul>
+      <li><strong>Nhà cung cấp dịch vụ:</strong> OpenAI (xử lý AI), Render.com (hosting) — chỉ dữ liệu cần thiết</li>
+      <li><strong>Yêu cầu pháp lý:</strong> Khi được yêu cầu bởi cơ quan có thẩm quyền theo quy định pháp luật</li>
+      <li><strong>Bảo vệ quyền lợi:</strong> Khi cần thiết để bảo vệ an toàn người dùng hoặc tài sản của chúng tôi</li>
+    </ul>
+
+    <h2>4. Bảo mật dữ liệu</h2>
+    <ul>
+      <li>Mật khẩu được mã hoá bằng bcrypt (Werkzeug) — không thể đọc ngược</li>
+      <li>Kết nối HTTPS bắt buộc trên production</li>
+      <li>Session cookie httpOnly, SameSite=Lax</li>
+      <li>Database SQLite được lưu trong thư mục instance, không public</li>
+    </ul>
+    <p>Không có hệ thống nào an toàn 100%. Trong trường hợp rò rỉ dữ liệu, chúng tôi sẽ thông báo cho người dùng bị ảnh hưởng trong vòng 72 giờ.</p>
+
+    <h2>5. Quyền của bạn</h2>
+    <p>Bạn có quyền:</p>
+    <ul>
+      <li>🔍 <strong>Truy cập:</strong> Yêu cầu xem dữ liệu chúng tôi lưu về bạn</li>
+      <li>✏️ <strong>Chỉnh sửa:</strong> Cập nhật thông tin tài khoản trong phần Cài đặt</li>
+      <li>🗑️ <strong>Xoá:</strong> Xoá tài khoản và toàn bộ dữ liệu bất cứ lúc nào</li>
+      <li>📤 <strong>Xuất:</strong> Yêu cầu xuất dữ liệu của bạn (gửi email cho chúng tôi)</li>
+      <li>🚫 <strong>Phản đối:</strong> Từ chối một số loại xử lý dữ liệu nhất định</li>
+    </ul>
+    <p>Để thực hiện quyền của mình, liên hệ: <a href="mailto:ngocdbmfhl32687@gmail.com">privacy@focusflow.ai</a></p>
+    {# ↑ ĐỔI EMAIL NÀY THÀNH EMAIL THẬT CỦA BẠN #}
+
+    <h2>6. Cookie</h2>
+    <p>Chúng tôi chỉ sử dụng cookie cần thiết cho hoạt động:</p>
+    <ul>
+      <li><strong>session:</strong> Lưu trạng thái đăng nhập (session cookie, tự xoá khi đóng trình duyệt nếu không chọn "nhớ tôi")</li>
+      <li><strong>ff-theme:</strong> Lưu tuỳ chọn giao diện sáng/tối (localStorage)</li>
+    </ul>
+    <p>Chúng tôi <strong>không dùng</strong> cookie quảng cáo, tracking, hay bên thứ ba.</p>
+
+    <h2>7. Dữ liệu trẻ em</h2>
+    <p>Dịch vụ không dành cho trẻ em dưới 13 tuổi. Nếu chúng tôi phát hiện tài khoản của người dưới 13 tuổi, chúng tôi sẽ xoá ngay.</p>
+
+    <h2>8. Thay đổi chính sách</h2>
+    <p>Khi cập nhật chính sách này, chúng tôi sẽ gửi thông báo qua email ít nhất 14 ngày trước khi có hiệu lực.</p>
+
+    <h2>9. Liên hệ</h2>
+    <p>Mọi thắc mắc về quyền riêng tư: <a href="mailto:ngocdbmfhl32687@gmail.com">privacy@focusflow.ai</a></p>
+    {# ↑ ĐỔI EMAIL NÀY THÀNH EMAIL THẬT CỦA BẠN #}
+  </div>
+</div>
+
+<script>
+(function(){const t=localStorage.getItem('ff-theme')||'dark';document.documentElement.dataset.theme=t;syncIcons(t);})();
+function toggleTheme(){const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;localStorage.setItem('ff-theme',t);syncIcons(t);}
+function syncIcons(t){document.getElementById('moonI').style.display=t==='dark'?'':'none';document.getElementById('sunI').style.display=t==='light'?'':'none';}
+</script>
+</body>
+</html>

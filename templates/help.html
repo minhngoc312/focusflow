@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Trợ giúp · FocusFlow AI{% endblock %}
+
+{% block content %}
+<div class="pg-head">
+  <div>
+    <div class="pg-eyebrow">Hỗ trợ</div>
+    <div class="pg-title">Trợ giúp & FAQ</div>
+    <div class="pg-sub">Hướng dẫn sử dụng FocusFlow AI</div>
+  </div>
+</div>
+
+<!-- FEATURE CARDS -->
+<div class="help-grid">
+  <div class="help-card">
+    <div class="help-card-ico">⚡</div>
+    <div class="help-card-title">Smart Block là gì?</div>
+    <div class="help-card-body">
+      Smart Block là đơn vị học tập cơ bản trong FocusFlow. Mỗi block bao gồm tên môn học và thời lượng (phút).
+      Bạn tạo block, bắt đầu học, rồi đánh dấu ✓ khi xong. Hệ thống tự động cộng vào streak và stats của bạn.
+    </div>
+  </div>
+  <div class="help-card">
+    <div class="help-card-ico">🔥</div>
+    <div class="help-card-title">Streak hoạt động thế nào?</div>
+    <div class="help-card-body">
+      Streak = số ngày liên tiếp bạn hoàn thành ít nhất 1 Smart Block.
+      Streak được tính tự động từ database — không fake, không hardcode.
+      Nếu một ngày bạn không hoàn thành bất kỳ block nào, streak về 0.
+    </div>
+  </div>
+  <div class="help-card">
+    <div class="help-card-ico">🧠</div>
+    <div class="help-card-title">AI Mentor dùng model gì?</div>
+    <div class="help-card-body">
+      AI Mentor dùng <strong>GPT-4o mini</strong> của OpenAI. Bạn cần cấu hình
+      <code style="background:var(--bg3);padding:1px 6px;border-radius:4px;font-size:12px">OPENAI_API_KEY</code>
+      trong biến môi trường. Nếu chưa có key, phần chat sẽ báo lỗi 503.
+    </div>
+  </div>
+  <div class="help-card">
+    <div class="help-card-ico">📊</div>
+    <div class="help-card-title">Analytics lấy dữ liệu từ đâu?</div>
+    <div class="help-card-body">
+      Tất cả số liệu (streak, biểu đồ 7 ngày, % hiệu suất) đều tính trực tiếp từ SQLite database.
+      Không có dữ liệu fake. Nếu chưa học ngày nào, biểu đồ sẽ hiển thị 0 và thông báo rõ.
+    </div>
+  </div>
+  <div class="help-card">
+    <div class="help-card-ico">🎯</div>
+    <div class="help-card-title">Cách tính % hiệu suất?</div>
+    <div class="help-card-body">
+      Hiệu suất = (Tổng phút học hoàn thành hôm nay) ÷ (Mục tiêu ngày) × 100%.
+      Bạn có thể thay đổi mục tiêu ngày trong trang
+      <a href="/settings" style="color:var(--ac3)">Cài đặt</a>.
+      Mặc định là 120 phút.
+    </div>
+  </div>
+  <div class="help-card">
+    <div class="help-card-ico">🔐</div>
+    <div class="help-card-title">Bảo mật tài khoản</div>
+    <div class="help-card-body">
+      Mật khẩu được mã hoá bằng bcrypt — không thể đọc ngược.
+      Session lưu trong cookie httpOnly, SameSite=Lax.
+      Bạn có thể đổi mật khẩu bất cứ lúc nào trong trang
+      <a href="/profile" style="color:var(--ac3)">Hồ sơ</a>.
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="help-faq">
+  <div class="faq-item">
+    <div class="faq-q">❓ Tôi quên mật khẩu, làm thế nào?</div>
+    <div class="faq-a">Hiện chưa có tính năng reset mật khẩu qua email. Liên hệ admin để được hỗ trợ tạo tài khoản mới.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">❓ Dữ liệu của tôi có bị mất không?</div>
+    <div class="faq-a">Dữ liệu lưu trong SQLite trên server. Trên Render, database được mount vào persistent disk nên không mất khi deploy lại. Tuy nhiên nên backup định kỳ.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">❓ Tôi có thể dùng trên điện thoại không?</div>
+    <div class="faq-a">Có. Giao diện có responsive design cho màn hình nhỏ. Sidebar sẽ thu lại tự động trên mobile.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">❓ Block "Xong" rồi có xoá được không?</div>
+    <div class="faq-a">Block đã hoàn thành không có nút xoá để bảo toàn dữ liệu streak và analytics. Chỉ block chưa hoàn thành mới xoá được.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">❓ Tại sao Analytics hiển thị 0 dù tôi đã học?</div>
+    <div class="faq-a">Biểu đồ chỉ tính các block đã được đánh dấu "✓ Xong". Nếu bạn tạo block nhưng chưa complete, phút học sẽ không được tính.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">❓ AI Mentor có nhớ lịch sử chat không?</div>
+    <div class="faq-a">Hiện tại mỗi tin nhắn là độc lập — AI không nhớ lịch sử hội thoại trước đó. Lịch sử chat cũng không được lưu vào database.</div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div style="margin-top:24px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:24px;text-align:center">
+  <div style="font-family:var(--fd);font-size:16px;font-weight:600;color:var(--tx);margin-bottom:8px">Vẫn cần hỗ trợ?</div>
+  <div style="font-size:13px;color:var(--tx2);margin-bottom:16px">Liên hệ qua email hoặc mở issue trên GitHub.</div>
+  <a href="mailto:ngocdbmfhl32687@gmail.com" class="btn btn-ghost">📧 support@focusflow.ai</a>
+</div>
+{% endblock %}

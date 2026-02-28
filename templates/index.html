@@ -1,597 +1,434 @@
-<!DOCTYPE html>
-<html lang="vi" data-theme="dark">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FocusFlow AI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<style>
-/* ═══════ TOKENS ═══════ */
-:root{
-  --font:'Plus Jakarta Sans',sans-serif;
-  --mono:'JetBrains Mono',monospace;
-  --bg:#09090E;--bg2:#0F0F16;--bg3:#16161F;
-  --surface:#1C1C27;--surface2:#22222F;
-  --bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.12);
-  --tx:#F0EEF8;--tx2:#9490A8;--tx3:#5A5670;
-  --ac:#7B6EF6;--ac2:#A89CF7;
-  --ac-dim:rgba(123,110,246,.1);--ac-glow:rgba(123,110,246,.28);
-  --user-bg:#7B6EF6;--ai-bg:#1C1C27;
-  --green:#34D399;--red:#F87171;--amber:#FBBF24;
-  --r4:4px;--r8:8px;--r12:12px;--r16:16px;--r24:24px;--r99:999px;
-  --sh-sm:0 1px 4px rgba(0,0,0,.4);
-  --sh-md:0 4px 20px rgba(0,0,0,.5);
-  --sh-lg:0 16px 56px rgba(0,0,0,.65);
-}
-[data-theme=light]{
-  --bg:#F7F6F2;--bg2:#EFEDE8;--bg3:#E8E6E0;
-  --surface:#fff;--surface2:#F2F0EB;
-  --bd:rgba(0,0,0,.08);--bd2:rgba(0,0,0,.14);
-  --tx:#16141E;--tx2:#6B6880;--tx3:#A8A5B8;
-  --ac:#5B50D6;--ac2:#7B6EF6;
-  --ac-dim:rgba(91,80,214,.08);--ac-glow:rgba(91,80,214,.22);
-  --user-bg:#5B50D6;--ai-bg:#fff;
-  --sh-sm:0 1px 4px rgba(0,0,0,.07);
-  --sh-md:0 4px 20px rgba(0,0,0,.1);
-  --sh-lg:0 16px 56px rgba(0,0,0,.14);
-}
+{% extends "base.html" %}
+{% block title %}Dashboard · FocusFlow AI{% endblock %}
 
-/* ═══════ RESET ═══════ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden}
-body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:99px}
-button{cursor:pointer;font-family:var(--font)}
-
-/* ═══════ LAYOUT ═══════ */
-.shell{display:grid;grid-template-columns:272px 1fr;grid-template-rows:48px 1fr;grid-template-areas:"tb tb""sb main";height:100vh}
-
-/* ═══════ TOPBAR ═══════ */
-.tb{grid-area:tb;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--bg2);border-bottom:1px solid var(--bd);z-index:100}
-.tb-l{display:flex;align-items:center;gap:12px}
-.logo{font-family:var(--mono);font-weight:500;font-size:14px;letter-spacing:-.3px;color:var(--tx)}
-.logo em{color:var(--ac);font-style:normal}
-.model-pill{display:flex;align-items:center;gap:6px;background:var(--ac-dim);border:1px solid rgba(123,110,246,.2);border-radius:var(--r99);padding:3px 10px;font-family:var(--mono);font-size:10.5px;font-weight:500;color:var(--ac2);letter-spacing:.3px}
-.pulse-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:pulse 2s ease infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.tb-r{display:flex;align-items:center;gap:8px}
-.ibtn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);border-radius:var(--r8);background:transparent;color:var(--tx2);transition:all .18s}
-.ibtn:hover{background:var(--surface);border-color:var(--bd2);color:var(--tx)}
-.avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#C084FC);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
-
-/* ═══════ SIDEBAR ═══════ */
-.sb{grid-area:sb;background:var(--bg2);border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;gap:0}
-.sb-s{padding:20px 16px 0}
-.sb-label{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;padding:0 4px}
-.sb-title{font-size:17px;font-weight:700;letter-spacing:-.3px;color:var(--tx);margin-bottom:3px}
-.sb-sub{font-size:12px;color:var(--tx2);line-height:1.5}
-.sb-div{height:1px;background:var(--bd);margin:16px 16px}
-
-/* Mode list */
-.mode-list{display:flex;flex-direction:column;gap:2px}
-.mitem{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r8);cursor:pointer;transition:all .15s;border:1px solid transparent;color:var(--tx2);font-size:13.5px;font-weight:500;background:transparent}
-.mitem:hover{background:var(--surface);color:var(--tx)}
-.mitem.active{background:var(--ac-dim);border-color:rgba(123,110,246,.2);color:var(--ac2)}
-.m-icon{width:28px;height:28px;border-radius:var(--r8);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;transition:background .15s}
-.mitem.active .m-icon{background:rgba(123,110,246,.18)}
-
-/* Smart block cards */
-.block-cards{display:flex;flex-direction:column;gap:7px;margin:0 16px}
-.bcard{background:var(--surface);border:1px solid var(--bd);border-radius:var(--r12);padding:11px 13px;transition:border-color .18s,transform .15s}
-.bcard:hover{border-color:var(--bd2);transform:translateX(2px)}
-.bc-head{display:flex;align-items:center;gap:7px;margin-bottom:5px}
-.btag{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.7px;text-transform:uppercase;padding:2px 7px;border-radius:var(--r99)}
-.btag-hard{background:rgba(248,113,113,.12);color:var(--red)}
-.btag-light{background:rgba(52,211,153,.12);color:var(--green)}
-.btag-review{background:rgba(251,191,36,.12);color:var(--amber)}
-.bc-time{font-family:var(--mono);font-size:11px;color:var(--tx2);margin-left:auto}
-.bc-subj{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:2px}
-.bc-detail{font-size:11.5px;color:var(--tx3)}
-
-/* Progress */
-.prog-wrap{margin:0 16px}
-.prog-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.prog-lbl{font-size:12px;color:var(--tx2)}
-.prog-pct{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--ac2)}
-.prog-track{height:5px;background:var(--surface2);border-radius:var(--r99);overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--ac),#C084FC);border-radius:var(--r99);transition:width .6s cubic-bezier(.25,.46,.45,.94)}
-
-/* Chart */
-.chart-outer{margin:0 16px}
-.chart-bars{display:flex;align-items:flex-end;gap:5px;height:54px;padding:0 2px}
-.cbar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.cbar{width:100%;min-height:4px;border-radius:3px 3px 0 0;background:var(--surface2);transition:background .2s}
-.cbar.today{background:var(--ac)}
-.cbar:hover{background:var(--ac2) !important;opacity:.9}
-.cday{font-family:var(--mono);font-size:9px;color:var(--tx3);text-align:center}
-.cday.today{color:var(--ac2)}
-
-/* Bio box */
-.bio-box{margin:0 16px;background:var(--surface);border:1px solid var(--bd2);border-radius:var(--r12);overflow:hidden}
-.bio-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px;border-bottom:1px solid var(--bd)}
-.bio-head-title{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;color:var(--ac2)}
-.bio-edit{font-size:11px;color:var(--tx3);cursor:pointer;background:none;border:none;transition:color .15s;padding:0}
-.bio-edit:hover{color:var(--ac2)}
-.bio-rows{padding:4px 0}
-.bio-row{display:flex;align-items:center;justify-content:space-between;padding:6px 14px;font-size:12px}
-.bio-key{color:var(--tx3)}
-.bio-val{color:var(--tx);font-weight:500}
-.bio-val.hl{color:var(--ac2)}
-.bio-setup{margin:0 16px;cursor:pointer}
-.bio-setup-inner{padding:10px 14px;border:1px dashed var(--bd2);border-radius:var(--r8);color:var(--tx3);font-size:12.5px;display:flex;align-items:center;gap:7px;transition:border-color .15s,color .15s}
-.bio-setup-inner:hover{border-color:var(--ac);color:var(--ac2)}
-.sb-spacer{flex:1}
-
-/* ═══════ MAIN ═══════ */
-.main{grid-area:main;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);position:relative}
-
-/* Empty state */
-.empty{position:absolute;inset:0 0 88px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:32px;pointer-events:none}
-.empty.hidden{display:none}
-.empty-ico{width:52px;height:52px;background:var(--surface);border:1px solid var(--bd2);border-radius:var(--r12);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:var(--sh-sm)}
-.empty-title{font-size:17px;font-weight:700;letter-spacing:-.3px;color:var(--tx)}
-.empty-sub{font-size:13px;color:var(--tx2);max-width:280px;line-height:1.55}
-.chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;pointer-events:all;margin-top:4px}
-.chip{padding:6px 14px;background:var(--surface);border:1px solid var(--bd2);border-radius:var(--r99);font-size:12.5px;color:var(--tx2);cursor:pointer;transition:all .15s}
-.chip:hover{border-color:var(--ac);color:var(--ac2);background:var(--ac-dim)}
-
-/* Messages */
-.msg-list{flex:1;overflow-y:auto;padding:28px 0 8px;display:flex;flex-direction:column;gap:2px}
-.mw{padding:4px 32px;animation:msgIn .15s ease both}
-@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.mw.user{display:flex;justify-content:flex-end}
-.mrow{display:flex;align-items:flex-end;gap:10px;max-width:780px}
-.mw.user .mrow{flex-direction:row-reverse}
-.mav{width:28px;height:28px;border-radius:var(--r8);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-bottom:2px;font-size:11px;font-weight:700;font-family:var(--mono)}
-.mw.ai   .mav{background:var(--ac-dim);border:1px solid rgba(123,110,246,.25);color:var(--ac2)}
-.mw.user .mav{background:var(--user-bg);color:#fff}
-.bubble{padding:11px 16px;border-radius:var(--r16);font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
-.mw.ai   .bubble{background:var(--ai-bg);color:var(--tx);border:1px solid var(--bd);border-bottom-left-radius:4px;box-shadow:var(--sh-sm);max-width:calc(100% - 42px)}
-.mw.user .bubble{background:var(--user-bg);color:#fff;border-bottom-right-radius:4px;max-width:72%}
-.typing-wrap{display:flex;align-items:center;gap:4px;padding:14px 18px}
-.tdot{width:5px;height:5px;background:var(--tx3);border-radius:50%;animation:tdot 1.2s ease infinite}
-.tdot:nth-child(2){animation-delay:.18s}.tdot:nth-child(3){animation-delay:.36s}
-@keyframes tdot{0%,80%,100%{transform:translateY(0);opacity:.3}40%{transform:translateY(-5px);opacity:1}}
-
-/* ═══════ INPUT ═══════ */
-.input-area{padding:12px 32px 20px;background:var(--bg);border-top:1px solid var(--bd);flex-shrink:0}
-.input-shell{background:var(--surface);border:1px solid var(--bd2);border-radius:var(--r24);display:flex;align-items:flex-end;gap:8px;padding:10px 10px 10px 18px;box-shadow:var(--sh-sm);transition:border-color .18s,box-shadow .18s}
-.input-shell:focus-within{border-color:var(--ac);box-shadow:var(--sh-sm),0 0 0 3px var(--ac-dim)}
-#msgInput{flex:1;border:none;background:transparent;font-family:var(--font);font-size:14px;color:var(--tx);resize:none;outline:none;max-height:150px;line-height:1.6;padding:3px 0 5px}
-#msgInput::placeholder{color:var(--tx3)}
-#msgInput::-webkit-scrollbar{width:0}
-.input-footer{display:flex;align-items:center;justify-content:space-between;padding:6px 4px 0}
-.inp-hint{font-size:11px;color:var(--tx3)}
-.char-ct{font-family:var(--mono);font-size:11px;color:var(--tx3)}
-.send-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;box-shadow:0 2px 10px var(--ac-glow)}
-.send-btn:hover:not(:disabled){transform:scale(1.06);background:var(--ac2);box-shadow:0 4px 16px var(--ac-glow)}
-.send-btn:disabled{opacity:.3;transform:none;cursor:not-allowed}
-.send-btn svg{pointer-events:none}
-
-/* ═══════ MODAL ═══════ */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:999;animation:ov-in .2s ease}
-@keyframes ov-in{from{opacity:0}to{opacity:1}}
-.overlay.hidden{display:none}
-.modal{background:var(--surface);border:1px solid var(--bd2);border-radius:var(--r24);padding:36px;width:100%;max-width:400px;box-shadow:var(--sh-lg);animation:m-in .25s cubic-bezier(.22,1,.36,1)}
-@keyframes m-in{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:none}}
-.m-eyebrow{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:var(--ac2);margin-bottom:12px}
-.modal h2{font-size:20px;font-weight:700;letter-spacing:-.3px;color:var(--tx);margin-bottom:6px}
-.modal p{font-size:13px;color:var(--tx2);line-height:1.55;margin-bottom:22px}
-.ff{margin-bottom:14px}
-.ff label{display:block;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.7px;text-transform:uppercase;color:var(--tx3);margin-bottom:6px}
-.ff input{width:100%;padding:9px 13px;background:var(--surface2);border:1px solid var(--bd2);border-radius:var(--r8);font-family:var(--font);font-size:14px;color:var(--tx);outline:none;transition:border-color .15s,background .15s}
-.ff input:focus{border-color:var(--ac);background:var(--ac-dim)}
-.ff input::placeholder{color:var(--tx3)}
-.mbtn{width:100%;padding:11px;background:var(--ac);color:#fff;border:none;border-radius:var(--r8);font-size:14px;font-weight:600;transition:all .15s;box-shadow:0 2px 10px var(--ac-glow);margin-top:6px}
-.mbtn:hover{background:var(--ac2);transform:translateY(-1px)}
-.mskip{display:block;text-align:center;font-size:12px;color:var(--tx3);cursor:pointer;margin-top:12px;transition:color .15s}
-.mskip:hover{color:var(--tx2)}
-
-/* ═══════ TOAST ═══════ */
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--surface);border:1px solid rgba(248,113,113,.3);border-radius:var(--r8);padding:10px 16px;font-size:13px;color:var(--red);box-shadow:var(--sh-md);display:flex;align-items:center;gap:8px;z-index:500;opacity:0;pointer-events:none;transition:all .22s}
-.toast.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
-
-/* ═══════ RESPONSIVE ═══════ */
-@media(max-width:800px){
-  .shell{grid-template-columns:1fr;grid-template-rows:48px auto 1fr;grid-template-areas:"tb""sb""main"}
-  .sb{max-height:180px;flex-direction:row;overflow-x:auto;overflow-y:hidden;padding:12px 12px 12px;gap:8px}
-  .sb-s{padding:0;min-width:150px;flex-shrink:0}
-  .sb-div{display:none}
-  .block-cards,.prog-wrap,.chart-outer,.bio-box,.bio-setup,.sb-spacer{display:none!important}
-  .mode-list{flex-direction:row;flex-wrap:nowrap}
-  .empty{inset:0 0 80px 0}
-  .mw{padding:4px 14px}
-  .input-area{padding:10px 14px 16px}
-  .modal{margin:16px;padding:26px 20px}
-}
-</style>
-</head>
-<body>
-
-<!-- MODAL -->
-<div class="overlay hidden" id="overlay">
+{% block modals %}
+<!-- ONBOARDING MODAL (shown once per account) -->
+<div class="mo hidden" id="onboardModal">
   <div class="modal">
-    <div class="m-eyebrow">⚡ AI Biorhythm</div>
-    <h2>Cá nhân hoá AI Mentor</h2>
-    <p>Cho FocusFlow biết nhịp sinh học của bạn để AI lập kế hoạch theo đúng giờ vàng tập trung.</p>
-    <div class="ff"><label>Giờ thức dậy</label><input type="time" id="bioWake" value="06:00"/></div>
-    <div class="ff"><label>Giờ đi ngủ</label><input type="time" id="bioSleep" value="23:00"/></div>
-    <div class="ff"><label>Thời điểm tập trung nhất</label><input type="text" id="bioPeak" placeholder="VD: 9:00 – 11:00"/></div>
-    <button class="mbtn" onclick="saveBio()">Lưu & bắt đầu</button>
-    <span class="mskip" onclick="closeModal()">Bỏ qua</span>
+    <div class="modal-band"></div>
+    <div class="modal-body">
+      <div class="ms active" id="ms1">
+        <div class="ms-badge">✦ Chào mừng</div>
+        <h2>Chào mừng đến<br>FocusFlow AI</h2>
+        <p>Nền tảng AI Mentor giúp bạn vượt trì hoãn, lập kế hoạch thông minh và đạt hiệu suất học tập cao nhất.</p>
+        <div class="modal-feats">
+          <div class="mf"><div class="mf-ico">🧠</div><div><div class="mf-title">AI Mentor cá nhân</div><div class="mf-sub">Phân tích & tư vấn theo nhịp sinh học</div></div></div>
+          <div class="mf"><div class="mf-ico">⚡</div><div><div class="mf-title">Smart Block Engine</div><div class="mf-sub">Xếp môn học vào đúng giờ vàng</div></div></div>
+          <div class="mf"><div class="mf-ico">📊</div><div><div class="mf-title">Analytics thật</div><div class="mf-sub">Theo dõi hiệu suất 7 ngày từ database</div></div></div>
+        </div>
+        <div class="m-acts"><button class="m-primary" onclick="nextStep(2)">Bắt đầu thiết lập →</button></div>
+        <div class="m-dots"><div class="mpd active"></div><div class="mpd"></div><div class="mpd"></div></div>
+      </div>
+      <div class="ms" id="ms2">
+        <div class="ms-badge">👤 Hồ sơ</div>
+        <h2>Thiết lập hồ sơ học tập</h2>
+        <p>AI sẽ cá nhân hoá lời khuyên dựa trên thông tin của bạn.</p>
+        <div class="mform">
+          <div class="ff"><label>Lớp / Năm học</label>
+            <select id="ob-grade"><option>Lớp 10</option><option>Lớp 11</option><option>Lớp 12</option><option>ĐH Năm 1</option><option>ĐH Năm 2</option><option>ĐH Năm 3</option><option>ĐH Năm 4</option></select>
+          </div>
+          <div class="ff"><label>Mục tiêu</label>
+            <select id="ob-goal"><option>Thi đại học</option><option>Cải thiện GPA</option><option>Kỳ thi sắp tới</option><option>Mục tiêu khác</option></select>
+          </div>
+        </div>
+        <div class="m-acts"><button class="m-ghost" onclick="nextStep(1)">← Quay lại</button><button class="m-primary" onclick="nextStep(3)">Tiếp theo →</button></div>
+        <div class="m-dots"><div class="mpd"></div><div class="mpd active"></div><div class="mpd"></div></div>
+      </div>
+      <div class="ms" id="ms3">
+        <div class="ms-badge">⚡ Nhịp sinh học</div>
+        <h2>Nhịp sinh học của bạn</h2>
+        <p>AI phân tích giờ vàng để xếp môn khó vào lúc bạn tập trung nhất.</p>
+        <div class="mform">
+          <div class="frow">
+            <div class="ff"><label>Thức dậy lúc</label><input type="time" id="ob-wake" value="06:30"/></div>
+            <div class="ff"><label>Đi ngủ lúc</label><input type="time" id="ob-sleep" value="23:00"/></div>
+          </div>
+          <div class="ff"><label>Giờ tập trung cao nhất</label><input type="text" id="ob-peak" placeholder="VD: 9:00–11:00"/></div>
+        </div>
+        <div class="m-acts"><button class="m-ghost" onclick="nextStep(2)">← Quay lại</button><button class="m-primary" onclick="finishOnboard()">Bắt đầu ngay ✦</button></div>
+        <div class="m-dots"><div class="mpd"></div><div class="mpd"></div><div class="mpd active"></div></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"><span>⚠</span><span id="toastMsg"></span></div>
-
-<!-- APP SHELL -->
-<div class="shell">
-
-  <!-- TOPBAR -->
-  <header class="tb">
-    <div class="tb-l">
-      <span class="logo">Focus<em>Flow</em> AI</span>
-      <div class="model-pill"><span class="pulse-dot"></span>GPT-4o mini</div>
-    </div>
-    <div class="tb-r">
-      <!-- theme toggle with moon/sun icons -->
-      <button class="ibtn" id="themeBtn" onclick="toggleTheme()" title="Đổi giao diện">
-        <svg id="moonI" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <svg id="sunI"  width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-      </button>
-      <!-- user menu dropdown -->
-      <div style="position:relative" id="userMenuWrap">
-        <div id="userMenuBtn" onclick="toggleUserMenu()" style="display:flex;align-items:center;gap:8px;border:1px solid var(--bd);border-radius:10px;padding:5px 10px 5px 6px;background:transparent;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--bd2)';this.style.background='var(--surface)'" onmouseout="this.style.borderColor='var(--bd)';this.style.background='transparent'">
-          <div class="avatar" id="userAvatar">{{ (user_name or 'U')[0]|upper }}</div>
-          <span style="font-size:12.5px;font-weight:500;color:var(--tx);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="userNameLabel">{{ user_name or 'Người dùng' }}</span>
-          <svg style="color:var(--tx3);flex-shrink:0" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
-        </div>
-        <div id="userDropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;width:240px;background:var(--surface);border:1px solid var(--bd2);border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.6);z-index:500;overflow:hidden">
-          <!-- header: name + email -->
-          <div style="padding:14px 16px 12px;border-bottom:1px solid var(--bd)">
-            <div style="font-size:13.5px;font-weight:600;color:var(--tx)">{{ user_name or 'Người dùng' }}</div>
-            <div style="font-size:11.5px;color:var(--tx3);margin-top:2px;word-break:break-all">{{ user_email or '' }}</div>
-          </div>
-          <!-- plan badge -->
-          <div style="margin:8px;padding:10px 12px;background:var(--acd);border-radius:8px;border:1px solid rgba(91,82,240,.18)">
-            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ac3)">Gói hiện tại</div>
-            <div style="font-size:13px;font-weight:600;color:var(--tx);margin-top:2px">Free Plan</div>
-            <div style="font-size:11px;color:var(--ac3);margin-top:3px;cursor:pointer">Nâng cấp Pro →</div>
-          </div>
-          <!-- items -->
-          <div style="padding:4px 6px 8px">
-            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;color:var(--tx2);cursor:pointer;transition:background .12s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">👤 Hồ sơ</div>
-            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;color:var(--tx2);cursor:pointer;transition:background .12s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">⚙️ Cài đặt</div>
-            <div style="height:1px;background:var(--bd);margin:4px 0"></div>
-            <a href="{{ url_for('logout') }}" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;color:var(--red);text-decoration:none;transition:background .12s" onmouseover="this.style.background='rgba(248,113,113,.1)'" onmouseout="this.style.background='transparent'">🚪 Đăng xuất</a>
-          </div>
-        </div>
+<!-- ADD BLOCK MODAL -->
+<div class="mo hidden" id="addBlockModal">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-band"></div>
+    <div class="modal-body" style="padding:28px">
+      <div class="ms-badge">⚡ Block mới</div>
+      <h2 style="margin-bottom:20px">Thêm Smart Block</h2>
+      <div class="mform">
+        <div class="ff"><label>Tên môn / chủ đề</label><input type="text" id="nb-subject" placeholder="VD: Toán – Giải tích"/></div>
+        <div class="ff"><label>Thời lượng (phút)</label><input type="number" id="nb-duration" value="30" min="5" max="480"/></div>
+      </div>
+      <div class="m-acts">
+        <button class="m-ghost" onclick="closeAddModal()">Huỷ</button>
+        <button class="m-primary" onclick="submitAddBlock()">Thêm Block</button>
       </div>
     </div>
-  </header>
+  </div>
+</div>
+{% endblock %}
 
-  <!-- SIDEBAR -->
-  <aside class="sb">
-    <div class="sb-s">
-      <div class="sb-title">AI Mentor</div>
-      <div class="sb-sub">Vượt trì hoãn · Tập trung</div>
-    </div>
-
-    <div class="sb-div"></div>
-
-    <div class="sb-s">
-      <div class="sb-label">Chế độ</div>
-      <div class="mode-list">
-        <div class="mitem active" onclick="setMode(this,'motivate')">
-          <div class="m-icon">💪</div>
-          <div><div style="font-size:13.5px;font-weight:600">Động viên</div><div style="font-size:11px;color:var(--tx3)">Tiếp thêm năng lượng</div></div>
-        </div>
-        <div class="mitem" onclick="setMode(this,'smart')">
-          <div class="m-icon">🧠</div>
-          <div><div style="font-size:13.5px;font-weight:600">Smart Block</div><div style="font-size:11px;color:var(--tx3)">Kế hoạch thông minh</div></div>
-        </div>
-        <div class="mitem" onclick="setMode(this,'focus')">
-          <div class="m-icon">⏱</div>
-          <div><div style="font-size:13.5px;font-weight:600">Deep Focus</div><div style="font-size:11px;color:var(--tx3)">Tập trung tuyệt đối</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sb-div" id="smart-div" style="display:none"></div>
-
-    <!-- SMART BLOCK CARDS -->
-    <div class="sb-s" id="smart-section" style="display:none;padding-bottom:0">
-      <div class="sb-label">Smart Block · Hôm nay</div>
-    </div>
-    <div class="block-cards" id="block-cards" style="display:none"></div>
-
-    <div class="sb-div"></div>
-
-    <!-- FOCUS PROGRESS -->
-    <div class="sb-s" style="padding-bottom:0">
-      <div class="sb-label">Tập trung hôm nay</div>
-    </div>
-    <div class="prog-wrap">
-      <div class="prog-top">
-        <span class="prog-lbl" id="progLbl">0 / 240 phút</span>
-        <span class="prog-pct" id="progPct">0%</span>
-      </div>
-      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-    </div>
-
-    <div class="sb-div"></div>
-
-    <!-- 7-DAY CHART -->
-    <div class="sb-s" style="padding-bottom:0">
-      <div class="sb-label">7 ngày gần nhất (phút)</div>
-    </div>
-    <div class="chart-outer">
-      <div class="chart-bars" id="chartBars"></div>
-    </div>
-
-    <div class="sb-div"></div>
-
-    <!-- BIORHYTHM -->
-    <div class="sb-s" style="padding-bottom:0">
-      <div class="sb-label">Nhịp sinh học</div>
-    </div>
-    <div class="bio-box" id="bioBox" style="display:none">
-      <div class="bio-head">
-        <span class="bio-head-title">Giờ vàng của bạn</span>
-        <button class="bio-edit" onclick="openModal()">Chỉnh sửa</button>
-      </div>
-      <div class="bio-rows">
-        <div class="bio-row"><span class="bio-key">Thức dậy</span><span class="bio-val" id="dWake">—</span></div>
-        <div class="bio-row"><span class="bio-key">Đi ngủ</span><span class="bio-val" id="dSleep">—</span></div>
-        <div class="bio-row"><span class="bio-key">Giờ vàng</span><span class="bio-val hl" id="dPeak">—</span></div>
-      </div>
-    </div>
-    <div class="bio-setup" id="bioSetup" onclick="openModal()">
-      <div class="bio-setup-inner"><span style="font-size:15px;line-height:1">+</span><span>Thiết lập nhịp sinh học</span></div>
-    </div>
-
-    <div class="sb-spacer"></div>
-  </aside>
-
-  <!-- MAIN CHAT -->
-  <main class="main">
-    <div class="empty" id="emptyEl">
-      <div class="empty-ico">✦</div>
-      <div class="empty-title">Bắt đầu hội thoại</div>
-      <div class="empty-sub">Chia sẻ điều đang cản trở bạn — AI Mentor sẵn sàng lắng nghe.</div>
-      <div class="chips">
-        <span class="chip" onclick="useChip(this)">Tôi đang lười học, mất động lực</span>
-        <span class="chip" onclick="useChip(this)">Lập kế hoạch học tập cho tôi</span>
-        <span class="chip" onclick="useChip(this)">Tôi bị phân tâm bởi điện thoại</span>
-        <span class="chip" onclick="useChip(this)">Giúp tôi bắt đầu ngay bây giờ</span>
-      </div>
-    </div>
-
-    <div class="msg-list" id="msgList"></div>
-
-    <div class="input-area">
-      <div class="input-shell">
-        <textarea id="msgInput" rows="1" placeholder="Nói cho AI Mentor nghe…"></textarea>
-        <button class="send-btn" id="sendBtn" onclick="send()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-          </svg>
-        </button>
-      </div>
-      <div class="input-footer">
-        <span class="inp-hint">Enter để gửi &nbsp;·&nbsp; Shift+Enter xuống dòng</span>
-        <span class="char-ct" id="charCt">0</span>
-      </div>
-    </div>
-  </main>
-
+{% block content %}
+<!-- PAGE HEADER -->
+<div class="pg-head">
+  <div>
+    <div class="pg-eyebrow" id="pgEyebrow">Đang tải...</div>
+    <div class="pg-title">Chào {{ user.full_name.split()[0] if user.full_name else 'bạn' }} ✦</div>
+    <div class="pg-sub" id="pgSub">Đang tải dữ liệu...</div>
+  </div>
+  <div class="hdr-acts">
+    <a href="/analytics" class="btn btn-ghost">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Analytics
+    </a>
+    <button class="btn btn-primary" onclick="openAddModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Block mới
+    </button>
+  </div>
 </div>
 
-<script>
-/* ── STATE ── */
-let mode    = 'motivate';
-let loading = false;
-let focMin  = 0;
-const GOAL  = 240;
+<!-- STATS (populated by /api/stats) -->
+<div class="stats-grid">
+  <div class="sc" id="sc-mins">
+    <div class="sc-head"><div class="sc-ico" style="background:var(--acd)">⏱</div><div class="sc-trend t-neu" id="sc-mins-trend">—</div></div>
+    <div class="sc-val" id="sc-mins-val"><span class="skel" style="width:60px;height:28px"> </span></div>
+    <div class="sc-lbl">Tập trung hôm nay</div>
+    <div class="sc-bar"><div class="sc-fill" id="sc-mins-bar" style="width:0%;background:var(--ac)"></div></div>
+  </div>
+  <div class="sc" id="sc-streak">
+    <div class="sc-head"><div class="sc-ico" style="background:var(--ad)">🔥</div><div class="sc-trend t-up" id="sc-streak-trend">Streak</div></div>
+    <div class="sc-val" id="sc-streak-val"><span class="skel" style="width:50px;height:28px"> </span></div>
+    <div class="sc-lbl">Streak học liên tục</div>
+    <div class="sc-bar"><div class="sc-fill" id="sc-streak-bar" style="width:0%;background:var(--amber)"></div></div>
+  </div>
+  <div class="sc" id="sc-blocks">
+    <div class="sc-head"><div class="sc-ico" style="background:var(--gd)">✅</div><div class="sc-trend t-neu" id="sc-blocks-trend">—</div></div>
+    <div class="sc-val" id="sc-blocks-val"><span class="skel" style="width:50px;height:28px"> </span></div>
+    <div class="sc-lbl">Smart Blocks xong</div>
+    <div class="sc-bar"><div class="sc-fill" id="sc-blocks-bar" style="width:0%;background:var(--green)"></div></div>
+  </div>
+  <div class="sc" id="sc-eff">
+    <div class="sc-head"><div class="sc-ico" style="background:var(--rd)">📈</div><div class="sc-trend t-neu" id="sc-eff-trend">—</div></div>
+    <div class="sc-val" id="sc-eff-val"><span class="skel" style="width:60px;height:28px"> </span></div>
+    <div class="sc-lbl">Hiệu suất hôm nay</div>
+    <div class="sc-bar"><div class="sc-fill" id="sc-eff-bar" style="width:0%;background:var(--ac)"></div></div>
+  </div>
+</div>
 
-const inp    = document.getElementById('msgInput');
-const sendB  = document.getElementById('sendBtn');
-const charCt = document.getElementById('charCt');
-const msgL   = document.getElementById('msgList');
-const emptyE = document.getElementById('emptyEl');
-
-/* ── THEME ── */
-const savedT = localStorage.getItem('ff-theme')||'dark';
-document.documentElement.dataset.theme = savedT;
-function toggleTheme(){
-  const t = document.documentElement.dataset.theme==='dark'?'light':'dark';
-  document.documentElement.dataset.theme=t;
-  localStorage.setItem('ff-theme',t);
-  const moon=document.getElementById('moonI'), sun=document.getElementById('sunI');
-  if(moon&&sun){ moon.style.display=t==='dark'?'':'none'; sun.style.display=t==='light'?'':'none'; }
-  setTimeout(redrawChart, 50);
-}
-
-/* ── TEXTAREA ── */
-inp.addEventListener('input',()=>{
-  inp.style.height='auto';
-  inp.style.height=Math.min(inp.scrollHeight,150)+'px';
-  charCt.textContent=inp.value.length;
-});
-inp.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}
-  if(e.ctrlKey&&e.key==='Enter'){e.preventDefault();send();}
-});
-
-/* ── MODE ── */
-function setMode(el,m){
-  document.querySelectorAll('.mitem').forEach(i=>i.classList.remove('active'));
-  el.classList.add('active');
-  mode=m;
-  if(m==='smart') showSmartBlocks();
-  else {
-    document.getElementById('smart-section').style.display='none';
-    document.getElementById('smart-div').style.display='none';
-    document.getElementById('block-cards').style.display='none';
-  }
-}
-
-/* ── SMART BLOCKS ── */
-const BLOCKS=[
-  {tag:'hard',  lbl:'Môn khó',   subj:'Toán – Giải tích',    time:'09:00',detail:'Giờ vàng tập trung'},
-  {tag:'light', lbl:'Môn nhẹ',   subj:'Lịch sử – Chương 3',  time:'14:00',detail:'Năng lượng trung bình'},
-  {tag:'review',lbl:'Ôn tập',    subj:'Tiếng Anh – Vocab',    time:'21:00',detail:'Trước khi ngủ'},
-];
-function showSmartBlocks(){
-  const c=document.getElementById('block-cards');
-  c.innerHTML=BLOCKS.map(b=>`
-    <div class="bcard">
-      <div class="bc-head">
-        <span class="btag btag-${b.tag}">${b.lbl}</span>
-        <span class="bc-time">${b.time}</span>
+<!-- TWO-COL: CHART + FOCUS METER -->
+<div class="two-col">
+  <div class="sec-card">
+    <div class="sec-head">
+      <div><div class="sec-title">Hiệu suất 7 ngày</div><div class="sec-sub">Phút tập trung mỗi ngày từ database</div></div>
+      <a href="/analytics" class="btn btn-ghost btn-sm">Xem chi tiết</a>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:var(--ac)"></div>Tập trung</div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>Mục tiêu</div>
       </div>
-      <div class="bc-subj">${b.subj}</div>
-      <div class="bc-detail">${b.detail}</div>
-    </div>`).join('');
-  document.getElementById('smart-section').style.display='block';
-  document.getElementById('smart-div').style.display='block';
-  c.style.display='flex';
+      <canvas id="focusChart" height="160"></canvas>
+    </div>
+  </div>
+  <div class="sec-card">
+    <div class="sec-head"><div><div class="sec-title">Hôm nay</div><div class="sec-sub">Tiến độ theo block</div></div></div>
+    <div class="fm">
+      <div class="fm-head">
+        <div>
+          <div class="fm-time" id="fmTime">0p</div>
+          <div class="fm-goal" id="fmGoal">Mục tiêu: {{ user.daily_goal }}p</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:var(--fd);font-size:22px;font-weight:700;color:var(--ac)" id="fmPct">0%</div>
+          <div style="font-size:11px;color:var(--tx3)">Hoàn thành</div>
+        </div>
+      </div>
+      <div class="fm-track"><div class="fm-fill" id="fmFill" style="width:0%"></div></div>
+      <div class="fm-sess-list" id="fmList">
+        <div style="padding:20px;text-align:center;color:var(--tx3);font-size:12.5px">Chưa có block hoàn thành hôm nay</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SMART BLOCKS -->
+<div class="sec-card" style="margin-bottom:24px" id="smart-blocks">
+  <div class="sec-head">
+    <div><div class="sec-title">Smart Blocks · Hôm nay</div><div class="sec-sub" id="blockSubTitle">Đang tải...</div></div>
+    <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Block mới</button>
+  </div>
+  <div class="blocks-grid" id="bGrid">
+    <div class="blocks-empty" style="grid-column:1/-1">
+      <span class="skel" style="width:200px;height:16px;display:block;margin:0 auto"> </span>
+    </div>
+  </div>
+</div>
+
+<!-- AI CHAT -->
+<div class="chat-sec" id="ai-mentor">
+  <div class="sec-head">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:8px;background:var(--acd);border:1px solid rgba(91,82,240,.2);display:flex;align-items:center;justify-content:center;font-size:15px">🧠</div>
+      <div><div class="sec-title">AI Mentor</div><div class="sec-sub" style="display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block"></span>Online</div></div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="clearChat()">Xoá chat</button>
+  </div>
+  <div class="chat-msgs" id="chatMsgs">
+    <div class="chat-empty" id="chatEmpty">
+      <div class="ce-ico">🧠</div>
+      <div class="ce-title">AI Mentor sẵn sàng</div>
+      <div class="ce-sub">Chia sẻ khó khăn học tập, yêu cầu lập kế hoạch, hoặc hỏi bất cứ điều gì về việc học.</div>
+      <div class="chips-row">
+        <span class="chip" onclick="useChip(this)">Tôi đang lười học, giúp tôi với</span>
+        <span class="chip" onclick="useChip(this)">Lập kế hoạch học hôm nay</span>
+        <span class="chip" onclick="useChip(this)">Làm sao để tập trung hơn?</span>
+        <span class="chip" onclick="useChip(this)">Phân tích điểm yếu của tôi</span>
+      </div>
+    </div>
+  </div>
+  <div class="chat-input">
+    <div class="inp-shell">
+      <textarea id="chatInput" rows="1" placeholder="Nói cho AI Mentor nghe…"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMsg()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <div class="inp-foot">
+      <div class="mode-chips">
+        <button class="mc-btn active" onclick="setMode(this,'motivate')">💪 Động viên</button>
+        <button class="mc-btn" onclick="setMode(this,'plan')">🧠 Lập kế hoạch</button>
+        <button class="mc-btn" onclick="setMode(this,'focus')">⏱ Deep Focus</button>
+      </div>
+      <span class="char-ct" id="charCt">0</span>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const DAILY_GOAL = {{ user.daily_goal }};
+
+/* ── DATE HEADER ── */
+(function(){
+  const vn=['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
+  const now=new Date();
+  const wk=Math.ceil(now.getDate()/7);
+  document.getElementById('pgEyebrow').textContent=`${vn[now.getDay()]}, ${now.getDate()} tháng ${now.getMonth()+1} · Tuần ${wk}`;
+})();
+
+/* ── ONBOARDING ── */
+const ONBOARD_KEY='ff-onboard-v2';
+let obStep=1;
+function nextStep(n){document.getElementById('ms'+obStep).classList.remove('active');obStep=n;document.getElementById('ms'+n).classList.add('active');}
+function finishOnboard(){
+  localStorage.setItem(ONBOARD_KEY,'1');
+  document.getElementById('onboardModal').classList.add('hidden');
+  showToast('✦ Dashboard đã sẵn sàng!','success');
+}
+if(!localStorage.getItem(ONBOARD_KEY)){
+  setTimeout(()=>document.getElementById('onboardModal').classList.remove('hidden'),800);
 }
 
-/* ── CHART ── */
-function renderChart(data){
-  const days=['T2','T3','T4','T5','T6','T7','CN'];
-  const d=new Date().getDay();
-  const ti=d===0?6:d-1;
-  const mx=Math.max(...data,1);
-  document.getElementById('chartBars').innerHTML=data.map((v,i)=>{
-    const h=Math.round((v/mx)*50);
-    const it=i===ti;
-    return`<div class="cbar-col">
-      <div class="cbar${it?' today':''}" style="height:${Math.max(h,4)}px" title="${v} phút"></div>
-      <div class="cday${it?' today':''}">${days[i]}</div>
+/* ═══════════════════════ STATS ═══════════════════════ */
+function fmt(mins){if(mins>=60)return Math.floor(mins/60)+'h '+(mins%60?mins%60+'p':'');return mins+'p';}
+
+async function loadStats(){
+  try{
+    const d=await fetch('/api/stats').then(r=>r.json());
+    const eff=d.efficiency||0;
+    const goal=d.today_goal||DAILY_GOAL;
+    const bar=pct=>Math.min(pct,100)+'%';
+
+    document.getElementById('sc-mins-val').innerHTML=fmt(d.today_mins||0)+'<span>/ '+fmt(goal)+'</span>';
+    document.getElementById('sc-mins-bar').style.width=bar((d.today_mins||0)/goal*100);
+    document.getElementById('sc-mins-trend').textContent=eff>0?'↑ '+eff+'%':'—';
+    document.getElementById('sc-mins-trend').className='sc-trend '+(eff>50?'t-up':'t-neu');
+
+    const streak=d.streak||0;
+    document.getElementById('sc-streak-val').innerHTML=streak+'<span>ngày</span>';
+    document.getElementById('sc-streak-bar').style.width=bar(Math.min(streak/30*100,100));
+    document.getElementById('sc-streak-trend').textContent=streak>0?'🔥 Active':'—';
+
+    const done=d.blocks_done||0;
+    document.getElementById('sc-blocks-val').innerHTML=done+'<span>blocks</span>';
+    document.getElementById('sc-blocks-bar').style.width=bar(done*10);
+    document.getElementById('sc-blocks-trend').textContent=done>0?'↑ '+done:'—';
+
+    document.getElementById('sc-eff-val').innerHTML=eff+'<span>%</span>';
+    document.getElementById('sc-eff-bar').style.width=bar(eff);
+    document.getElementById('sc-eff-trend').className='sc-trend '+(eff>=80?'t-up':eff>=40?'t-neu':'t-dn');
+    document.getElementById('sc-eff-trend').textContent=eff>=80?'↑ Tốt':eff>=40?'Ổn':'↓ Cần cố';
+
+    // Focus meter
+    document.getElementById('fmTime').textContent=fmt(d.today_mins||0);
+    document.getElementById('fmPct').textContent=eff+'%';
+    document.getElementById('fmFill').style.width=bar(eff);
+
+    const sub=done>0?`Đã xong ${done} block hôm nay`:'Chưa có block nào hôm nay — bắt đầu ngay nhé!';
+    document.getElementById('pgSub').textContent=sub;
+  }catch(e){console.error('stats err',e);}
+}
+
+/* ═══════════════════════ CHART ═══════════════════════ */
+let chartData=[];
+async function loadChart(){
+  try{
+    chartData=await fetch('/api/analytics').then(r=>r.json());
+    redrawChart();
+  }catch(e){}
+}
+function redrawChart(){drawLineChart('focusChart',chartData,DAILY_GOAL);}
+window.addEventListener('resize',redrawChart);
+
+/* ═══════════════════════ BLOCKS ═══════════════════════ */
+let blocksData=[];
+
+async function loadBlocks(){
+  try{
+    blocksData=await fetch('/api/blocks').then(r=>r.json());
+    renderBlocks(blocksData);
+    renderFocusList(blocksData.filter(b=>b.completed));
+  }catch(e){console.error('blocks err',e);}
+}
+
+function renderBlocks(blocks){
+  const grid=document.getElementById('bGrid');
+  const done=blocks.filter(b=>b.completed).length;
+  const total=blocks.length;
+  document.getElementById('blockSubTitle').textContent=
+    total===0?'Chưa có block nào — tạo ngay!':`${done}/${total} hoàn thành`;
+
+  if(total===0){
+    grid.innerHTML='<div class="blocks-empty" style="grid-column:1/-1">Chưa có Smart Block nào hôm nay.<br><button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="openAddModal()">+ Tạo block đầu tiên</button></div>';
+    return;
+  }
+
+  const colors=['var(--ac)','var(--amber)','var(--green)','var(--red)','var(--ac3)'];
+  grid.innerHTML=blocks.map((b,i)=>{
+    const c=colors[i%colors.length];
+    const isDone=b.completed;
+    const t=b.created_at?b.created_at.slice(11,16):'--:--';
+    return `<div class="bc${isDone?' done':''}" id="bc${b.id}">
+      <div class="bc-accent" style="background:${c}"></div>
+      <div class="bc-head">
+        <span class="bc-tag" style="background:${c}22;color:${c}">${b.duration}p</span>
+        <span class="bc-time">${t}</span>
+      </div>
+      <div class="bc-title">${esc(b.subject)}</div>
+      ${isDone
+        ? `<div class="bc-check" style="display:flex"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="2 8 6 12 14 4"/></svg></div>`
+        : `<div class="bc-acts">
+             <button class="bc-btn bc-done-btn" onclick="doneBlock(${b.id})">✓ Xong</button>
+             <button class="bc-btn bc-del-btn" onclick="delBlock(${b.id})">✕</button>
+           </div>`
+      }
     </div>`;
   }).join('');
 }
 
-/* ── PROGRESS ── */
-function setProgress(m){
-  focMin=m;
-  const p=Math.min(Math.round((m/GOAL)*100),100);
-  document.getElementById('progLbl').textContent=`${m} / ${GOAL} phút`;
-  document.getElementById('progPct').textContent=`${p}%`;
-  document.getElementById('progFill').style.width=p+'%';
+function renderFocusList(doneBlocks){
+  const list=document.getElementById('fmList');
+  if(!doneBlocks.length){
+    list.innerHTML='<div style="padding:16px;text-align:center;color:var(--tx3);font-size:12.5px">Chưa có block hoàn thành hôm nay</div>';
+    return;
+  }
+  const colors=['var(--ac)','var(--green)','var(--amber)','var(--red)'];
+  list.innerHTML=doneBlocks.map((b,i)=>`
+    <div class="fm-sess">
+      <div class="fm-dot" style="background:${colors[i%colors.length]}"></div>
+      <div class="fm-si"><div class="fm-sn">${esc(b.subject)}</div><div class="fm-st">${b.completed_at?b.completed_at.slice(11,16):''}</div></div>
+      <div class="fm-dur">${b.duration}p</div>
+    </div>`).join('');
 }
 
-/* ── MESSAGES ── */
-function addMsg(role,text){
-  emptyE.classList.add('hidden');
-  const w=document.createElement('div');
-  w.className=`mw ${role}`;
-  w.innerHTML=`<div class="mrow"><div class="mav">${role==='ai'?'✦':'U'}</div><div class="bubble">${esc(text)}</div></div>`;
-  msgL.appendChild(w);
-  msgL.scrollTo({top:msgL.scrollHeight,behavior:'smooth'});
+async function doneBlock(id){
+  try{
+    await fetch('/api/blocks/'+id+'/complete',{method:'POST'});
+    sndComplete();
+    await loadBlocks();
+    await loadStats();
+    showToast('✅ Block hoàn thành!','success');
+  }catch(e){showToast('⚠️ Lỗi khi cập nhật block','error');}
+}
+
+async function delBlock(id){
+  try{
+    await fetch('/api/blocks/'+id,{method:'DELETE'});
+    await loadBlocks();
+    await loadStats();
+    showToast('🗑️ Đã xoá block','info');
+  }catch(e){showToast('⚠️ Lỗi khi xoá block','error');}
+}
+
+/* ADD BLOCK MODAL */
+function openAddModal(){document.getElementById('addBlockModal').classList.remove('hidden');setTimeout(()=>document.getElementById('nb-subject').focus(),50);}
+function closeAddModal(){document.getElementById('addBlockModal').classList.add('hidden');}
+document.getElementById('addBlockModal').addEventListener('click',function(e){if(e.target===this)closeAddModal();});
+document.getElementById('onboardModal').addEventListener('click',function(e){if(e.target===this)document.getElementById('onboardModal').classList.add('hidden');});
+
+async function submitAddBlock(){
+  const subject=document.getElementById('nb-subject').value.trim();
+  const duration=parseInt(document.getElementById('nb-duration').value)||30;
+  if(!subject){showToast('⚠️ Nhập tên môn học','error');return;}
+  try{
+    await fetch('/api/blocks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subject,duration})});
+    closeAddModal();
+    document.getElementById('nb-subject').value='';
+    await loadBlocks();
+    await loadStats();
+    showToast('⚡ Đã thêm Smart Block: '+subject,'success');
+    sndClick();
+  }catch(e){showToast('⚠️ Lỗi khi tạo block','error');}
+}
+
+/* ═══════════════════════ CHAT ═══════════════════════ */
+let chatMode='motivate',chatLoading=false;
+const ci=document.getElementById('chatInput'),sb=document.getElementById('sendBtn');
+ci.addEventListener('input',()=>{ci.style.height='auto';ci.style.height=Math.min(ci.scrollHeight,140)+'px';document.getElementById('charCt').textContent=ci.value.length;});
+ci.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
+function setMode(el,m){document.querySelectorAll('.mc-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');chatMode=m;}
+function useChip(el){ci.value=el.textContent;ci.style.height='auto';document.getElementById('charCt').textContent=ci.value.length;ci.focus();}
+
+function sendMsg(){
+  const t=ci.value.trim();if(!t||chatLoading)return;
+  hideEmpty();addMsg('user',t);ci.value='';ci.style.height='auto';document.getElementById('charCt').textContent='0';
+  const tid=addTyping();chatLoading=true;sb.disabled=true;
+  fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t,mode:chatMode})})
+    .then(r=>r.json()).then(d=>{removeTyping(tid);chatLoading=false;sb.disabled=false;
+      d.error?addMsg('ai','⚠️ '+esc(d.error)):addMsg('ai',d.reply);})
+    .catch(()=>{removeTyping(tid);chatLoading=false;sb.disabled=false;addMsg('ai','⚠️ Không kết nối được server.');});
+}
+function addMsg(r,t){
+  hideEmpty();
+  const cm=document.getElementById('chatMsgs');
+  const w=document.createElement('div');w.className='msg-row '+r;
+  const av=document.createElement('div');av.className='msg-av '+(r==='ai'?'ai-av':'user-av');av.textContent=r==='ai'?'AI':'U';
+  const b=document.createElement('div');b.className='bubble '+(r==='ai'?'ai-bub':'user-bub');b.textContent=t;
+  r==='ai'?w.append(av,b):w.append(b,av);
+  cm.appendChild(w);cm.scrollTo({top:cm.scrollHeight,behavior:'smooth'});
 }
 function addTyping(){
-  emptyE.classList.add('hidden');
-  const w=document.createElement('div');
-  w.className='mw ai';w.id='typing-row';
-  w.innerHTML=`<div class="mrow"><div class="mav">✦</div><div class="bubble" style="padding:0"><div class="typing-wrap"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div></div>`;
-  msgL.appendChild(w);
-  msgL.scrollTo({top:msgL.scrollHeight,behavior:'smooth'});
+  const id='ty'+Date.now(),cm=document.getElementById('chatMsgs');
+  const w=document.createElement('div');w.className='msg-row ai';w.id=id;
+  w.innerHTML='<div class="msg-av ai-av">AI</div><div class="bubble ai-bub" style="padding:0"><div class="typing-ind"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>';
+  cm.appendChild(w);cm.scrollTo({top:cm.scrollHeight,behavior:'smooth'});return id;
 }
-function removeTyping(){const e=document.getElementById('typing-row');if(e)e.remove()}
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
+function hideEmpty(){const e=document.getElementById('chatEmpty');if(e)e.style.display='none';}
+function clearChat(){document.getElementById('chatMsgs').querySelectorAll('.msg-row').forEach(r=>r.remove());const e=document.getElementById('chatEmpty');if(e)e.style.display='';}
 
-/* ── SEND ── */
-async function send(){
-  const txt=inp.value.trim();
-  if(!txt||loading)return;
-  addMsg('user',txt);
-  inp.value='';inp.style.height='auto';charCt.textContent='0';
-  addTyping();setLoading(true);
-  try{
-    const r=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:txt,mode})});
-    const d=await r.json();
-    removeTyping();
-    if(d.error){showToast(d.error);addMsg('ai','⚠️ '+d.error);}
-    else{
-      addMsg('ai',d.reply);
-      setProgress(Math.min(focMin+5,GOAL));
-      if(d.biorhythm_data)updateBio(d.biorhythm_data);
-    }
-  }catch{removeTyping();showToast('Không kết nối được server.');addMsg('ai','⚠️ Không kết nối được server.');}
-  finally{setLoading(false);}
-}
-function setLoading(on){loading=on;sendB.disabled=on;}
-function useChip(el){inp.value=el.textContent;inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,150)+'px';charCt.textContent=inp.value.length;inp.focus();}
-
-/* ── TOAST ── */
-let tTimer;
-function showToast(msg){
-  document.getElementById('toastMsg').textContent=msg;
-  document.getElementById('toast').classList.add('show');
-  clearTimeout(tTimer);tTimer=setTimeout(()=>document.getElementById('toast').classList.remove('show'),3500);
-}
-
-/* ── BIO ── */
-function openModal(){document.getElementById('overlay').classList.remove('hidden')}
-function closeModal(){document.getElementById('overlay').classList.add('hidden')}
-async function saveBio(){
-  const w=document.getElementById('bioWake').value;
-  const s=document.getElementById('bioSleep').value;
-  const p=document.getElementById('bioPeak').value.trim();
-  if(!w||!s||!p){showToast('Vui lòng điền đủ 3 thông tin.');return;}
-  try{await fetch('/biorhythm/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({wake_time:w,sleep_time:s,peak_time:p})});}catch{}
-  updateBio({wake_time:w,sleep_time:s,peak_time:p});
-  closeModal();
-  emptyE.classList.add('hidden');
-  addMsg('ai',`✦ Đã lưu nhịp sinh học!\n• Thức dậy: ${w}\n• Đi ngủ: ${s}\n• Giờ vàng: ${p}\n\nBây giờ AI sẽ cá nhân hoá kế hoạch học tập theo đúng nhịp của bạn.`);
-}
-function updateBio(d){
-  if(!d||!d.wake_time)return;
-  document.getElementById('dWake').textContent=d.wake_time;
-  document.getElementById('dSleep').textContent=d.sleep_time;
-  document.getElementById('dPeak').textContent=d.peak_time;
-  document.getElementById('bioBox').style.display='block';
-  document.getElementById('bioSetup').style.display='none';
-}
+/* ── UTILS ── */
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
 /* ── INIT ── */
-(async()=>{
-  renderChart([85,120,60,200,95,140,30]);
-  setProgress(0);
-  try{
-    const r=await fetch('/biorhythm/status');
-    const d=await r.json();
-    if(d.complete)updateBio(d.data);
-    else setTimeout(openModal,900);
-  }catch{}
-})();
-
-/* ─── AUTH: user menu dropdown ─── */
-function toggleUserMenu() {
-  const d = document.getElementById('userDropdown');
-  d.style.display = d.style.display === 'none' ? 'block' : 'none';
-}
-document.addEventListener('click', function (e) {
-  if (!e.target.closest('#userMenuWrap'))
-    document.getElementById('userDropdown').style.display = 'none';
-});
-
-/* ─── THEME: sync moon/sun icons on load & switch ─── */
-(function syncThemeIcons() {
-  const t = localStorage.getItem('ff-theme') || 'dark';
-  document.documentElement.dataset.theme = t;
-  const moon = document.getElementById('moonI');
-  const sun  = document.getElementById('sunI');
-  if (moon && sun) {
-    moon.style.display = t === 'dark'  ? '' : 'none';
-    sun.style.display  = t === 'light' ? '' : 'none';
-  }
-})();
+loadStats();
+loadChart();
+loadBlocks();
 </script>
-</body>
-</html>
+{% endblock %}

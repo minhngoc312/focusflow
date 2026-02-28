@@ -7,113 +7,169 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
+/* ── Exact same token set as login.html / dashboard ── */
 :root{
-  --fd:'Outfit',sans-serif;--fb:'DM Sans',sans-serif;
-  --bg:#09090E;--bg2:#0F1117;--bg3:#161820;
-  --card:#13141A;--card2:#1A1B23;
-  --bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.12);
-  --tx:#ECEDF2;--tx2:#8B8D9A;--tx3:#4E505E;
-  --ac:#5B52F0;--ac2:#7B74F5;--ac3:#A39FF8;
-  --acd:rgba(91,82,240,.12);--acg:rgba(91,82,240,.3);
-  --green:#22C55E;--gd:rgba(34,197,94,.12);
-  --red:#F87171;--rd:rgba(248,113,113,.12);
-  --amber:#F59E0B;--ad:rgba(245,158,11,.1);
+  --fd:'Outfit',sans-serif; --fb:'DM Sans',sans-serif;
+  --bg:#09090E; --bg2:#0F1117; --bg3:#161820;
+  --card:#13141A; --card2:#1A1B23;
+  --bd:rgba(255,255,255,.07); --bd2:rgba(255,255,255,.12);
+  --tx:#ECEDF2; --tx2:#8B8D9A; --tx3:#4E505E;
+  --ac:#5B52F0; --ac2:#7B74F5; --ac3:#A39FF8;
+  --acd:rgba(91,82,240,.12); --acg:rgba(91,82,240,.3);
+  --green:#22C55E; --gd:rgba(34,197,94,.12);
+  --red:#F87171;   --rd:rgba(248,113,113,.12);
+  --amber:#F59E0B; --ad:rgba(245,158,11,.1);
+  --sh3:0 16px 56px rgba(0,0,0,.6),0 6px 18px rgba(0,0,0,.3);
   --sh4:0 24px 80px rgba(0,0,0,.7);
 }
 [data-theme=light]{
-  --bg:#F8FAFC;--bg2:#F1F4F8;--bg3:#E9EDF4;
-  --card:#FFFFFF;--card2:#F8FAFC;
-  --bd:rgba(0,0,0,.08);--bd2:rgba(0,0,0,.13);
-  --tx:#111218;--tx2:#5A5D6E;--tx3:#9EA2B4;
-  --ac:#4338CA;--ac2:#5B52F0;--ac3:#7B74F5;
-  --acd:rgba(67,56,202,.08);--acg:rgba(67,56,202,.22);
+  --bg:#F8FAFC; --bg2:#F1F4F8; --bg3:#E9EDF4;
+  --card:#FFFFFF; --card2:#F8FAFC;
+  --bd:rgba(0,0,0,.08); --bd2:rgba(0,0,0,.13);
+  --tx:#111218; --tx2:#5A5D6E; --tx3:#9EA2B4;
+  --ac:#4338CA; --ac2:#5B52F0; --ac3:#7B74F5;
+  --acd:rgba(67,56,202,.08); --acg:rgba(67,56,202,.22);
+  --sh3:0 16px 56px rgba(0,0,0,.12),0 6px 18px rgba(0,0,0,.05);
   --sh4:0 24px 80px rgba(0,0,0,.14);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:var(--fb);-webkit-font-smoothing:antialiased}
-body{background:var(--bg);color:var(--tx);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;position:relative;overflow:hidden}
-
-.orb{position:fixed;border-radius:50%;pointer-events:none;filter:blur(100px);opacity:.16;z-index:0}
-.o1{width:600px;height:600px;background:var(--ac);top:-200px;left:-120px}
-.o2{width:500px;height:500px;background:#A855F7;bottom:-160px;right:-100px}
-.o3{width:300px;height:300px;background:#EC4899;top:50%;left:50%;transform:translate(-50%,-50%)}
-
-.card{position:relative;z-index:1;width:100%;max-width:480px;background:var(--card);border:1px solid var(--bd2);border-radius:24px;overflow:hidden;box-shadow:var(--sh4);animation:scaleIn .3s cubic-bezier(.22,1,.36,1) both;margin:20px 0}
-@keyframes scaleIn{from{opacity:0;transform:scale(.96) translateY(14px)}to{opacity:1;transform:none}}
-.card-band{height:4px;background:linear-gradient(90deg,var(--ac),#A855F7,#EC4899)}
-.card-body{padding:36px 38px 32px}
-
-.logo-row{display:flex;align-items:center;gap:9px;margin-bottom:26px}
-.logo-ico{width:30px;height:30px;border-radius:8px;background:var(--ac);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:12px;font-weight:800;color:#fff;letter-spacing:-.5px;box-shadow:0 2px 8px var(--acg);flex-shrink:0}
-.logo-txt{font-family:var(--fd);font-weight:700;font-size:15px;letter-spacing:-.3px;color:var(--tx)}
-
-.ttl{font-family:var(--fd);font-size:26px;font-weight:700;letter-spacing:-.5px;color:var(--tx);margin-bottom:6px;line-height:1.15}
-.sub{font-size:13.5px;color:var(--tx2);margin-bottom:16px;line-height:1.55}
-
-/* benefit chips */
-.chips-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:22px}
-.chip{
-  display:inline-flex;align-items:center;gap:5px;
-  background:var(--acd);border:1px solid rgba(91,82,240,.18);border-radius:999px;
-  padding:4px 11px;font-size:11px;font-weight:600;color:var(--ac3);white-space:nowrap;
+body{
+  background:var(--bg);color:var(--tx);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;padding:20px;position:relative;overflow:hidden;
 }
 
-/* flash */
-.flashes{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+/* ambient orbs — identical to login.html */
+.orb{position:fixed;border-radius:50%;pointer-events:none;filter:blur(100px);opacity:.18;z-index:0}
+.o1{width:640px;height:640px;background:var(--ac);top:-250px;left:-160px}
+.o2{width:520px;height:520px;background:#A855F7;bottom:-180px;right:-130px}
+.o3{width:320px;height:320px;background:#2563EB;top:50%;left:50%;transform:translate(-50%,-50%)}
+
+/* card */
+.card{
+  position:relative;z-index:1;width:100%;max-width:460px;
+  background:var(--card);border:1px solid var(--bd2);border-radius:24px;
+  overflow:hidden;box-shadow:var(--sh4);
+  animation:scaleIn .3s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes scaleIn{from{opacity:0;transform:scale(.96) translateY(14px)}to{opacity:1;transform:none}}
+.card-band{height:4px;background:linear-gradient(90deg,#A855F7,var(--ac),#EC4899)}
+.card-body{padding:36px 38px 32px}
+
+/* logo row */
+.logo-row{display:flex;align-items:center;gap:9px;margin-bottom:28px}
+.logo-ico{
+  width:30px;height:30px;border-radius:8px;background:var(--ac);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:12px;font-weight:800;color:#fff;
+  letter-spacing:-.5px;box-shadow:0 2px 8px var(--acg);flex-shrink:0;
+}
+.logo-txt{font-family:var(--fd);font-weight:700;font-size:15px;letter-spacing:-.3px;color:var(--tx)}
+
+/* headings */
+.ttl{font-family:var(--fd);font-size:24px;font-weight:700;letter-spacing:-.5px;color:var(--tx);margin-bottom:6px;line-height:1.15}
+.sub{font-size:13.5px;color:var(--tx2);margin-bottom:22px;line-height:1.55}
+
+/* feature tags */
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px}
+.tag{
+  display:flex;align-items:center;gap:5px;
+  padding:4px 11px;background:var(--card2);
+  border:1px solid var(--bd);border-radius:999px;
+  font-size:11.5px;color:var(--tx2);
+}
+
+/* flash messages */
+.flashes{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
 .flash{display:flex;align-items:flex-start;gap:9px;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.45}
 .f-error  {background:var(--rd);border:1px solid rgba(248,113,113,.25);color:var(--red)}
 .f-success{background:var(--gd);border:1px solid rgba(34,197,94,.25);color:var(--green)}
 .f-warning{background:var(--ad);border:1px solid rgba(245,158,11,.2);color:var(--amber)}
 .f-info   {background:var(--acd);border:1px solid rgba(91,82,240,.2);color:var(--ac3)}
+.fi{flex-shrink:0;margin-top:1px}
+
+/* two-column grid for some fields */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 
 /* form */
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.field{margin-bottom:15px}
-.field label{display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);margin-bottom:7px}
-.req{color:var(--red)}
+.field{margin-bottom:16px}
+.field label{
+  display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--tx3);margin-bottom:7px;
+}
 .inp-wrap{position:relative}
-.inp-ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--tx3);pointer-events:none;line-height:1}
+.inp-ico{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  color:var(--tx3);pointer-events:none;line-height:1;
+}
 .field input{
-  width:100%;padding:11px 38px 11px 38px;
+  width:100%;padding:11px 14px 11px 38px;
   background:var(--bg3);border:1px solid var(--bd2);border-radius:10px;
   font-family:var(--fb);font-size:14px;color:var(--tx);outline:none;
   transition:border-color .18s,background .18s,box-shadow .18s;-webkit-appearance:none;
 }
 .field input:focus{border-color:var(--ac);background:var(--acd);box-shadow:0 0 0 3px rgba(91,82,240,.12)}
 .field input::placeholder{color:var(--tx3)}
-.field input.v-ok {border-color:var(--green)}
-.field input.v-bad{border-color:var(--red)}
-.eye-btn{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--tx3);cursor:pointer;font-size:14px;padding:4px;transition:color .15s;line-height:1}
+.field-hint{font-size:11px;color:var(--tx3);margin-top:5px;padding-left:2px}
+
+/* password toggle */
+.eye-btn{
+  position:absolute;right:11px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--tx3);cursor:pointer;
+  font-size:14px;padding:4px;transition:color .15s;line-height:1;
+}
 .eye-btn:hover{color:var(--tx2)}
 
-/* strength bar */
-.str{margin-top:7px}
-.str-track{height:3px;background:var(--card2);border-radius:999px;overflow:hidden;margin-bottom:4px}
-.str-fill{height:100%;border-radius:999px;transition:width .3s,background .3s;width:0}
-.str-lbl{font-size:11px;font-weight:500}
-
-/* terms */
-.terms-row{display:flex;align-items:flex-start;gap:9px;margin:4px 0 20px}
-.terms-row input[type=checkbox]{width:16px;height:16px;margin-top:2px;accent-color:var(--ac);flex-shrink:0;cursor:pointer}
-.terms-row label{font-size:12.5px;color:var(--tx2);line-height:1.55;cursor:pointer}
-.terms-row a{color:var(--ac3);text-decoration:none}
+/* terms checkbox */
+.terms-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:20px;margin-top:4px}
+.terms-row input[type=checkbox]{
+  width:16px;height:16px;min-width:16px;margin-top:2px;
+  accent-color:var(--ac);cursor:pointer;
+}
+.terms-lbl{font-size:12.5px;color:var(--tx2);line-height:1.55;cursor:pointer}
+.terms-lbl a{color:var(--ac3);text-decoration:none;font-weight:500}
+.terms-lbl a:hover{text-decoration:underline}
 
 /* submit */
-.submit{width:100%;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:10px;font-family:var(--fb);font-size:14.5px;font-weight:600;cursor:pointer;transition:all .18s;box-shadow:0 2px 10px var(--acg);display:flex;align-items:center;justify-content:center;gap:8px}
+.submit{
+  width:100%;padding:12px;background:var(--ac);color:#fff;border:none;
+  border-radius:10px;font-family:var(--fb);font-size:14.5px;font-weight:600;cursor:pointer;
+  transition:all .18s;box-shadow:0 2px 10px var(--acg);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
 .submit:hover:not(:disabled){background:var(--ac2);transform:translateY(-1px);box-shadow:0 4px 16px var(--acg)}
-.submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.submit:disabled{opacity:.55;cursor:not-allowed;transform:none}
 
+/* divider */
 .divider{display:flex;align-items:center;gap:12px;margin:22px 0;font-size:12px;color:var(--tx3)}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--bd)}
+
+/* footer */
 .foot{text-align:center;font-size:13.5px;color:var(--tx2)}
 .foot a{color:var(--ac3);font-weight:600;text-decoration:none;transition:color .15s}
 .foot a:hover{color:var(--ac2)}
-.pfoot{position:relative;z-index:1;margin-top:18px;font-size:11.5px;color:var(--tx3);text-align:center}
 
-.theme-toggle{position:fixed;top:16px;right:16px;z-index:10;width:34px;height:34px;background:var(--card);border:1px solid var(--bd2);border-radius:8px;color:var(--tx2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:all .15s}
+.pfoot{position:relative;z-index:1;margin-top:22px;font-size:11.5px;color:var(--tx3);text-align:center}
+
+/* theme toggle */
+.theme-toggle{
+  position:fixed;top:16px;right:16px;z-index:10;
+  width:34px;height:34px;background:var(--card);border:1px solid var(--bd2);
+  border-radius:8px;color:var(--tx2);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;font-size:15px;transition:all .15s;
+}
 .theme-toggle:hover{background:var(--card2);color:var(--tx)}
 
-@media(max-width:500px){.frow{grid-template-columns:1fr}.card-body{padding:28px 22px 26px}}
+/* password strength */
+.strength-bar{height:3px;background:var(--bg3);border-radius:999px;overflow:hidden;margin-top:7px}
+.strength-fill{height:100%;border-radius:999px;transition:width .3s,background .3s;width:0}
+.strength-lbl{font-size:11px;margin-top:4px;color:var(--tx3);transition:color .3s}
+
+@media(max-width:480px){
+  .card-body{padding:26px 20px 24px}
+  .row2{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -136,21 +192,23 @@ body{background:var(--bg);color:var(--tx);display:flex;flex-direction:column;ali
     </div>
 
     <div class="ttl">Tạo tài khoản miễn phí</div>
-    <div class="sub">Gia nhập hàng nghìn học sinh đang học tập hiệu quả hơn với AI.</div>
+    <div class="sub">Bắt đầu hành trình học tập thông minh với AI Mentor cá nhân hoá.</div>
 
-    <div class="chips-row">
-      <div class="chip">✦ AI Mentor cá nhân</div>
-      <div class="chip">⚡ Smart Block Engine</div>
-      <div class="chip">📊 Analytics 7 ngày</div>
+    <div class="tags">
+      <div class="tag">🎯 Smart Block</div>
+      <div class="tag">🔥 Streak tracking</div>
+      <div class="tag">🧬 Nhịp sinh học</div>
+      <div class="tag">✦ AI Mentor 24/7</div>
     </div>
 
+    {# ── Flash messages ── #}
     {% with msgs = get_flashed_messages(with_categories=true) %}
       {% if msgs %}
       <div class="flashes">
         {% for cat, msg in msgs %}
         {% set icon = {'error': '⚠️', 'success': '✅', 'warning': '⏱', 'info': '💡'}.get(cat, '💡') %}
         <div class="flash f-{{ cat }}">
-          <span>{{ icon }}</span>
+          <span class="fi">{{ icon }}</span>
           <span>{{ msg }}</span>
         </div>
         {% endfor %}
@@ -160,175 +218,152 @@ body{background:var(--bg);color:var(--tx);display:flex;flex-direction:column;ali
 
     <form method="POST" action="{{ url_for('register') }}" id="regForm" novalidate>
 
-      <div class="frow">
-        <div class="field">
-          <label for="full_name">Họ và tên</label>
-          <div class="inp-wrap">
-            <span class="inp-ico">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </span>
-            <input type="text" name="full_name" id="full_name"
-              placeholder="Nguyễn Văn An"
-              value="{{ full_name or '' }}"
-              autocomplete="name"/>
-          </div>
-        </div>
-        <div class="field">
-          <label for="email">Email <span class="req">*</span></label>
-          <div class="inp-wrap">
-            <span class="inp-ico">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            </span>
-            <input type="email" name="email" id="email"
-              placeholder="name@example.com"
-              value="{{ email or '' }}"
-              autocomplete="email" required/>
-          </div>
+      <div class="field">
+        <label for="full_name">Họ và tên</label>
+        <div class="inp-wrap">
+          <span class="inp-ico">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          <input
+            type="text" name="full_name" id="full_name"
+            placeholder="Nguyễn Văn A"
+            value="{{ full_name or '' }}"
+            autocomplete="name"
+          />
         </div>
       </div>
 
       <div class="field">
-        <label for="password">Mật khẩu <span class="req">*</span></label>
+        <label for="email">Email</label>
         <div class="inp-wrap">
           <span class="inp-ico">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </span>
-          <input type="password" name="password" id="password"
-            placeholder="Tối thiểu 6 ký tự"
-            autocomplete="new-password" required
-            oninput="calcStrength(this.value)"/>
-          <button type="button" class="eye-btn" id="e1" onclick="toggleEye('password','e1')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-        </div>
-        <div class="str">
-          <div class="str-track"><div class="str-fill" id="strFill"></div></div>
-          <div class="str-lbl" id="strLbl" style="color:var(--tx3)">—</div>
+          <input
+            type="email" name="email" id="email"
+            placeholder="name@example.com"
+            value="{{ email or '' }}"
+            autocomplete="email" required autofocus
+          />
         </div>
       </div>
 
-      <div class="field">
-        <label for="confirm_password">Xác nhận mật khẩu <span class="req">*</span></label>
-        <div class="inp-wrap">
-          <span class="inp-ico">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          </span>
-          <input type="password" name="confirm_password" id="confirm_password"
-            placeholder="Nhập lại mật khẩu"
-            autocomplete="new-password" required
-            oninput="checkMatch()"/>
-          <button type="button" class="eye-btn" id="e2" onclick="toggleEye('confirm_password','e2')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
+      <div class="row2">
+        <div class="field" style="margin-bottom:0">
+          <label for="password">Mật khẩu</label>
+          <div class="inp-wrap">
+            <span class="inp-ico">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input
+              type="password" name="password" id="password"
+              placeholder="Tối thiểu 6 ký tự"
+              autocomplete="new-password" required
+              oninput="updateStrength(this.value)"
+            />
+            <button type="button" class="eye-btn" onclick="toggleEye('password','eyeS1','eyeH1')">
+              <svg id="eyeS1" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg id="eyeH1" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+          <div class="strength-bar"><div class="strength-fill" id="sBar"></div></div>
+          <div class="strength-lbl" id="sLbl"></div>
+        </div>
+
+        <div class="field" style="margin-bottom:0">
+          <label for="confirm_password">Xác nhận</label>
+          <div class="inp-wrap">
+            <span class="inp-ico">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <input
+              type="password" name="confirm_password" id="confirm_password"
+              placeholder="Nhập lại mật khẩu"
+              autocomplete="new-password" required
+            />
+            <button type="button" class="eye-btn" onclick="toggleEye('confirm_password','eyeS2','eyeH2')">
+              <svg id="eyeS2" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg id="eyeH2" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
         </div>
       </div>
+
+      <div style="margin-bottom:18px"></div>
 
       <div class="terms-row">
-        <input type="checkbox" id="terms" required/>
-        <label for="terms">
-          Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> và
-          <a href="#">Chính sách quyền riêng tư</a> của FocusFlow AI.
+        <input type="checkbox" id="agreeTerms" required/>
+        <label class="terms-lbl" for="agreeTerms">
+          Tôi đồng ý với <a href="{{ url_for('terms') }}" target="_blank">Điều khoản dịch vụ</a>
+          và <a href="{{ url_for('privacy') }}" target="_blank">Chính sách bảo mật</a> của FocusFlow AI.
         </label>
       </div>
 
       <button type="submit" class="submit" id="subBtn">
         <span id="subLbl">Tạo tài khoản</span>
-        <svg id="subIco" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg id="subArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </button>
 
     </form>
 
-    <div class="divider">đã có tài khoản?</div>
-    <div class="foot"><a href="{{ url_for('login') }}">← Đăng nhập</a></div>
+    <div class="divider">hoặc</div>
+    <div class="foot">
+      Đã có tài khoản? <a href="{{ url_for('login') }}">Đăng nhập →</a>
+    </div>
 
   </div>
 </div>
 
-<div class="pfoot">Miễn phí · Không cần thẻ tín dụng</div>
+<div class="pfoot">FocusFlow AI · AI Mentor học tập thế hệ mới</div>
 
 <script>
-/* theme */
-(function () {
-  const t = localStorage.getItem('ff-theme') || 'dark';
-  document.documentElement.dataset.theme = t;
-  syncIcons(t);
+/* theme — persist */
+(function(){
+  const t=localStorage.getItem('ff-theme')||'dark';
+  document.documentElement.dataset.theme=t;syncIcons(t);
 })();
-function toggleTheme() {
-  const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-  document.documentElement.dataset.theme = t;
-  localStorage.setItem('ff-theme', t);
-  syncIcons(t);
+function toggleTheme(){
+  const t=document.documentElement.dataset.theme==='dark'?'light':'dark';
+  document.documentElement.dataset.theme=t;
+  localStorage.setItem('ff-theme',t);syncIcons(t);
 }
-function syncIcons(t) {
-  document.getElementById('moonI').style.display = t === 'dark'  ? '' : 'none';
-  document.getElementById('sunI').style.display  = t === 'light' ? '' : 'none';
+function syncIcons(t){
+  document.getElementById('moonI').style.display=t==='dark'?'':'none';
+  document.getElementById('sunI').style.display=t==='light'?'':'none';
 }
 
-/* eye toggle — works for any input + button pair */
-function toggleEye(inputId, btnId) {
-  const inp = document.getElementById(inputId);
-  const btn = document.getElementById(btnId);
-  if (inp.type === 'password') {
-    inp.type = 'text';
-    btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
-  } else {
-    inp.type = 'password';
-    btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
-  }
+/* password visibility */
+function toggleEye(inputId,showId,hideId){
+  const inp=document.getElementById(inputId);
+  const s=document.getElementById(showId),h=document.getElementById(hideId);
+  if(inp.type==='password'){inp.type='text';s.style.display='none';h.style.display='';}
+  else{inp.type='password';s.style.display='';h.style.display='none';}
 }
 
 /* password strength */
-const STR_LEVELS = [
-  { w: '20%', c: 'var(--red)',   t: 'Rất yếu'   },
-  { w: '40%', c: 'var(--red)',   t: 'Yếu'        },
-  { w: '60%', c: 'var(--amber)', t: 'Trung bình' },
-  { w: '80%', c: 'var(--ac3)',   t: 'Mạnh'       },
-  { w: '100%',c: 'var(--green)', t: 'Rất mạnh'   },
-];
-function calcStrength(v) {
-  const fill = document.getElementById('strFill');
-  const lbl  = document.getElementById('strLbl');
-  if (!v) { fill.style.width = '0'; lbl.textContent = '—'; lbl.style.color = 'var(--tx3)'; return; }
-  let s = 0;
-  if (v.length >= 6)           s++;
-  if (v.length >= 10)          s++;
-  if (/[A-Z]/.test(v))         s++;
-  if (/[0-9]/.test(v))         s++;
-  if (/[^A-Za-z0-9]/.test(v)) s++;
-  const lv = STR_LEVELS[Math.min(s - 1, 4)] || { w: '0', c: 'var(--tx3)', t: '—' };
-  fill.style.width      = lv.w;
-  fill.style.background = lv.c;
-  lbl.textContent       = lv.t;
-  lbl.style.color       = lv.c;
+function updateStrength(v){
+  const bar=document.getElementById('sBar'),lbl=document.getElementById('sLbl');
+  let score=0,text='',color='';
+  if(v.length>=6)score++;if(v.length>=10)score++;
+  if(/[A-Z]/.test(v))score++;if(/[0-9]/.test(v))score++;if(/[^A-Za-z0-9]/.test(v))score++;
+  if(v.length===0){bar.style.width='0';lbl.textContent='';return;}
+  if(score<=1){text='Yếu';color='#F87171';}
+  else if(score<=2){text='Trung bình';color='#F59E0B';}
+  else if(score<=3){text='Khá';color='#60A5FA';}
+  else{text='Mạnh';color='#22C55E';}
+  bar.style.width=(score/5*100)+'%';bar.style.background=color;
+  lbl.textContent=text;lbl.style.color=color;
 }
 
-/* confirm password match indicator */
-function checkMatch() {
-  const c = document.getElementById('confirm_password');
-  if (!c.value) { c.classList.remove('v-ok', 'v-bad'); return; }
-  const match = c.value === document.getElementById('password').value;
-  c.classList.toggle('v-ok',  match);
-  c.classList.toggle('v-bad', !match);
-}
-
-/* submit guard + loading state */
-document.getElementById('regForm').addEventListener('submit', function (e) {
-  const p  = document.getElementById('password').value;
-  const cp = document.getElementById('confirm_password').value;
-  if (p !== cp) {
-    e.preventDefault();
-    document.getElementById('confirm_password').classList.add('v-bad');
-    return;
-  }
-  if (!document.getElementById('terms').checked) {
-    e.preventDefault();
-    alert('Vui lòng đồng ý với điều khoản để tiếp tục.');
-    return;
-  }
-  const btn = document.getElementById('subBtn');
-  document.getElementById('subLbl').textContent   = 'Đang tạo tài khoản…';
-  document.getElementById('subIco').style.display = 'none';
-  btn.disabled = true; btn.style.opacity = '.7';
+/* submit loading state */
+document.getElementById('regForm').addEventListener('submit',function(e){
+  const pw=document.getElementById('password').value;
+  const cf=document.getElementById('confirm_password').value;
+  if(pw!==cf){e.preventDefault();alert('Mật khẩu xác nhận không khớp!');return;}
+  const btn=document.getElementById('subBtn');
+  document.getElementById('subLbl').textContent='Đang tạo tài khoản…';
+  document.getElementById('subArrow').style.display='none';
+  btn.disabled=true;btn.style.opacity='.7';
 });
 </script>
 </body>
