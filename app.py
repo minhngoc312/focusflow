@@ -401,6 +401,10 @@ def login():
 
     return render_template("login.html")
 
+@app.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -480,3 +484,7 @@ Không lan man.
 
 if __name__ == "__main__":
     app.run(debug=True)
+    
+@app.route("/test")
+def test():
+    return "OK"
